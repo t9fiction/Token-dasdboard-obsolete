@@ -28,7 +28,7 @@ function App() {
     setContract(isContract);
     setweb3global(web3);
   };
-
+  
   // First one time run
   useEffect(() => {
     const fun = async () => {
@@ -37,7 +37,7 @@ function App() {
     fun();
     console.log("contract : ", contract);
   }, []);
-
+  
   useEffect(() => {
     //connect_wallet();
     console.log("contract : ", contract);
@@ -46,70 +46,70 @@ function App() {
       fetch_data();
     }
     // if(!isModal && web3Global === ""){
-    //   console.log("empty web3")
-    //   fetch_data();
-    // }
-    //connect_wallet();
-  }, [web3Global]);
-
-  // const loadDisconnect = async () => {
-    // Chain Disconnect
-    // window.ethereum.on("disconnect", async () => {
-    // window.localStorage.clear();
-    // // await window.ethereum.disconnect();
-    // // await window.ethereum.close();
-    // // await web3Global.eth.currentProvider.disconnect();
-    // await web3Global.current.clearCachedProvider();
-    // setIsModal(false);
-    // setweb3global("");
-    // console.log("chain changed : ");
-    // });
-  // };
-
-  async function connect_wallet() {
-    // if(Web3.givenProvider){
-
-    const web3Modal = new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider, // required
-          options: {
-            infuraId:
-              "3ca1583421a74069b07075f209879afb", // required
-              // "17342b0f3f344d2d96c2c89c5fddc959", // required
-          },
-        },
-        coinbasewallet: {
-          package: CoinbaseWalletSDK, // Required
-          options: {
-            appName: "FlyGuyz", // Required
-            infuraId:
-              "3ca1583421a74069b07075f209879afb", // Required
-            rpc: "", // Optional if `infuraId` is provided; otherwise it's required
-            chainId: 1, // Optional. It defaults to 1 if not provided
-            darkMode: false, // Optional. Use dark theme, defaults to false
-          },
-        },
-      },
-    });
-
-    const provider = await web3Modal.connect();
-    if (!provider) {
-      return {
-        web3LoadingErrorMessage: "Error in connecting Wallet",
+      //   console.log("empty web3")
+      //   fetch_data();
+      // }
+      //connect_wallet();
+    }, [web3Global]);
+    
+    const loadDisconnect = async () => {
+      // Chain Disconnect
+      // window.ethereum.on("disconnect", async () => {
+        window.localStorage.clear();
+        // // await window.ethereum.disconnect();
+        // // await window.ethereum.close();
+        // // await web3Global.eth.currentProvider.disconnect();
+        // await web3Global.current.clearCachedProvider();
+        setIsModal(false);
+        setweb3global("");
+        // console.log("chain changed : ");
+        // });
       };
-    } else {
-      const web3 = new Web3(provider);
-      setIsModal(true);
-      const addresses = await web3.eth.getAccounts();
-      const address = addresses[0];
-
-      console.log("address", address);
-      setisWalletConnected(true);
-      setConnectBtnText("Connected");
-      // const contract = new web3.eth.Contract(contract_abi, contract_address);
+      
+      async function connect_wallet() {
+        // if(Web3.givenProvider){
+          
+          const web3Modal = new Web3Modal({
+            network: "mainnet", // optional
+            cacheProvider: true, // optional
+            providerOptions: {
+              walletconnect: {
+                package: WalletConnectProvider, // required
+                options: {
+                  infuraId: "3ca1583421a74069b07075f209879afb", // required
+                  // "17342b0f3f344d2d96c2c89c5fddc959", // required
+                },
+              },
+              coinbasewallet: {
+                package: CoinbaseWalletSDK, // Required
+                options: {
+                  appName: "FlyGuyz", // Required
+                  infuraId: "3ca1583421a74069b07075f209879afb", // Required
+                  rpc: "", // Optional if `infuraId` is provided; otherwise it's required
+                  chainId: 1, // Optional. It defaults to 1 if not provided
+                  darkMode: false, // Optional. Use dark theme, defaults to false
+                },
+              },
+            },
+          });
+          
+          const provider = await web3Modal.connect();
+          if (!provider) {
+            return {
+              web3LoadingErrorMessage: "Error in connecting Wallet",
+            };
+          } else {
+            const web3 = new Web3(provider);
+            const isContract = new web3.eth.Contract(contract_abi, contract_address);
+            setContract(isContract);
+            setIsModal(true);
+            const addresses = await web3.eth.getAccounts();
+            const address = addresses[0];
+            
+            console.log("address", address);
+            setisWalletConnected(true);
+            setConnectBtnText("Connected");
+            // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
       setweb3global(web3);
       //   contract.methods.getMintedCount(address).call((err,result) => {
@@ -236,8 +236,9 @@ function App() {
     if (web3Global) {
       // const web3 = new Web3(web3Global);
       // await Web3.givenProvider.enable();
-      // const contract = new web3.eth.Contract(contract_abi, contract_address);
+      // const contract = new web3Global.eth.Contract(contract_abi, contract_address);
 
+      console.log("Buy function : ", contract, web3Global);
       const addresses = await web3Global.eth.getAccounts();
       const address = addresses[0];
       console.log("addresses[0]: " + addresses[0]);
@@ -246,19 +247,19 @@ function App() {
       console.log("Price:  .........   " + selectedEthValueinWei);
       //   price =0.006;
       try {
-        const estemated_Gas = await contract.methods.buyToken().estimateGas({
-          from: address,
-          value: selectedEthValueinWei.toString(),
-          maxPriorityFeePerGas: null,
-          maxFeePerGas: null,
-        });
-        console.log(estemated_Gas);
+        // const estemated_Gas = await contract.methods.buyToken().estimateGas({
+        //   from: address,
+        //   value: selectedEthValueinWei.toString(),
+        //   maxPriorityFeePerGas: null,
+        //   maxFeePerGas: null,
+        // });
+        // console.log(estemated_Gas);
         const result = await contract.methods.buyToken().send({
           from: address,
           value: selectedEthValueinWei.toString(),
-          gas: estemated_Gas,
-          maxPriorityFeePerGas: null,
-          maxFeePerGas: null,
+          // gas: estemated_Gas,
+          // maxPriorityFeePerGas: null,
+          // maxFeePerGas: null,
         });
       } catch (e) {
         show_error_alert(e);
