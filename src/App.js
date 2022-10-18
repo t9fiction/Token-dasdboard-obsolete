@@ -234,11 +234,11 @@ function App() {
   }
   async function buy() {
     if (web3Global) {
-      const web3 = new Web3(web3Global);
-      await Web3.givenProvider.enable();
-      const contract = new web3.eth.Contract(contract_abi, contract_address);
+      // const web3 = new Web3(web3Global);
+      // await Web3.givenProvider.enable();
+      // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
-      const addresses = await web3.eth.getAccounts();
+      const addresses = await web3Global.eth.getAccounts();
       const address = addresses[0];
       console.log("addresses[0]: " + addresses[0]);
 
