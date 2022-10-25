@@ -160,7 +160,6 @@ function App() {
       console.log("error: " + err);
       console.log("result: " + result);
       if (result != null) {
-        console.log("we r inside if and that means no error");
         setcontractEthBalance(result);
         calculate_progress(web3Global, result);
       }
