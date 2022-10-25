@@ -3,7 +3,11 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
-import { contract_address, contract_updatedABI, contract_updatedAddress ,contract_abi, speedy_nodes } from "./config";
+import {
+  contract_updatedABI,
+  contract_updatedAddress,
+  speedy_nodes,
+} from "./config";
 function App() {
   const [isWalletConnected, setisWalletConnected] = useState(false);
   const [connectBtnText, setConnectBtnText] = useState("Connect Wallet");
@@ -24,92 +28,99 @@ function App() {
   const startFunction = async () => {
     // await loadDisconnect()
     const web3 = new Web3(speedy_nodes);
-    const isContract = new web3.eth.Contract(contract_updatedABI, contract_updatedAddress);
+    const isContract = new web3.eth.Contract(
+      contract_updatedABI,
+      contract_updatedAddress
+    );
     setContract(isContract);
     setweb3global(web3);
+    // console.log(isContract);
+    // console.log(web3);
   };
-  
+
   // First one time run
   useEffect(() => {
     const fun = async () => {
       await startFunction();
     };
     fun();
-    console.log("contract : ", contract);
   }, []);
-  
+
   useEffect(() => {
     //connect_wallet();
-    console.log("contract : ", contract);
-    if (!isModal && web3Global != "") {
-      console.log("loaded web3");
+    if (!isModal && web3Global != "" && contract) {
+      // console.log("loaded web3 : ",web3Global);
+      // console.log("contract loaded : ",contract)
       fetch_data();
     }
     // if(!isModal && web3Global === ""){
-      //   console.log("empty web3")
-      //   fetch_data();
-      // }
-      //connect_wallet();
-    }, [web3Global]);
-    
-    const loadDisconnect = async () => {
-      // Chain Disconnect
-      // window.ethereum.on("disconnect", async () => {
-        window.localStorage.clear();
-        // // await window.ethereum.disconnect();
-        // // await window.ethereum.close();
-        // // await web3Global.eth.currentProvider.disconnect();
-        // await web3Global.current.clearCachedProvider();
-        setIsModal(false);
-        setweb3global("");
-        // console.log("chain changed : ");
-        // });
+    //   console.log("empty web3")
+    //   fetch_data();
+    // }
+    //connect_wallet();
+  }, [web3Global, contract]);
+
+  const loadDisconnect = async () => {
+    // Chain Disconnect
+    // window.ethereum.on("disconnect", async () => {
+    window.localStorage.clear();
+    // // await window.ethereum.disconnect();
+    // // await window.ethereum.close();
+    // // await web3Global.eth.currentProvider.disconnect();
+    // await web3Global.current.clearCachedProvider();
+    setIsModal(false);
+    setweb3global("");
+    // console.log("chain changed : ");
+    // });
+  };
+
+  async function connect_wallet() {
+    // if(Web3.givenProvider){
+
+    const web3Modal = new Web3Modal({
+      network: "mainnet", // optional
+      cacheProvider: true, // optional
+      providerOptions: {
+        walletconnect: {
+          package: WalletConnectProvider, // required
+          options: {
+            infuraId: "3ca1583421a74069b07075f209879afb", // required
+            // "17342b0f3f344d2d96c2c89c5fddc959", // required
+          },
+        },
+        coinbasewallet: {
+          package: CoinbaseWalletSDK, // Required
+          options: {
+            appName: "FlyGuyz", // Required
+            infuraId: "3ca1583421a74069b07075f209879afb", // Required
+            rpc: "", // Optional if `infuraId` is provided; otherwise it's required
+            chainId: 1, // Optional. It defaults to 1 if not provided
+            darkMode: false, // Optional. Use dark theme, defaults to false
+          },
+        },
+      },
+    });
+
+    const provider = await web3Modal.connect();
+    if (!provider) {
+      return {
+        web3LoadingErrorMessage: "Error in connecting Wallet",
       };
-      
-      async function connect_wallet() {
-        // if(Web3.givenProvider){
-          
-          const web3Modal = new Web3Modal({
-            network: "mainnet", // optional
-            cacheProvider: true, // optional
-            providerOptions: {
-              walletconnect: {
-                package: WalletConnectProvider, // required
-                options: {
-                  infuraId: "3ca1583421a74069b07075f209879afb", // required
-                  // "17342b0f3f344d2d96c2c89c5fddc959", // required
-                },
-              },
-              coinbasewallet: {
-                package: CoinbaseWalletSDK, // Required
-                options: {
-                  appName: "FlyGuyz", // Required
-                  infuraId: "3ca1583421a74069b07075f209879afb", // Required
-                  rpc: "", // Optional if `infuraId` is provided; otherwise it's required
-                  chainId: 1, // Optional. It defaults to 1 if not provided
-                  darkMode: false, // Optional. Use dark theme, defaults to false
-                },
-              },
-            },
-          });
-          
-          const provider = await web3Modal.connect();
-          if (!provider) {
-            return {
-              web3LoadingErrorMessage: "Error in connecting Wallet",
-            };
-          } else {
-            const web3 = new Web3(provider);
-            const isContract = new web3.eth.Contract(contract_updatedABI, contract_updatedAddress);
-            setContract(isContract);
-            setIsModal(true);
-            const addresses = await web3.eth.getAccounts();
-            const address = addresses[0];
-            
-            console.log("address", address);
-            setisWalletConnected(true);
-            setConnectBtnText("Connected");
-            // const contract = new web3.eth.Contract(contract_abi, contract_address);
+    } else {
+      const web3 = new Web3(provider);
+      const isContract = new web3.eth.Contract(
+        contract_updatedABI,
+        contract_updatedAddress
+      );
+      setContract(isContract);
+      setIsModal(true);
+      const addresses = await web3.eth.getAccounts();
+      const address = addresses[0];
+
+      console.log("address", address);
+      setisWalletConnected(true);
+      setConnectBtnText("Connected");
+      // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
       setweb3global(web3);
       //   contract.methods.getMintedCount(address).call((err,result) => {
@@ -137,10 +148,19 @@ function App() {
     console.log(
       "contract in fetch_data : ",
       contract.methods.getContractEthBalance()
+      // .call((err, result) => {
+      //   console.log("error: " + err);
+      //   if (result != null) {
+      //     console.log("result: " + result);
+      //   }
+      // })
     );
+
     contract.methods.getContractEthBalance().call((err, result) => {
       console.log("error: " + err);
+      console.log("result: " + result);
       if (result != null) {
+        console.log("we r inside if and that means no error");
         setcontractEthBalance(result);
         calculate_progress(web3Global, result);
       }
