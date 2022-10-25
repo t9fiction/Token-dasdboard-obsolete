@@ -3,7 +3,7 @@ import Web3 from "web3";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
-import { contract_address, contract_abi, speedy_nodes } from "./config";
+import { contract_address, contract_updatedABI, contract_updatedAddress ,contract_abi, speedy_nodes } from "./config";
 function App() {
   const [isWalletConnected, setisWalletConnected] = useState(false);
   const [connectBtnText, setConnectBtnText] = useState("Connect Wallet");
@@ -24,7 +24,7 @@ function App() {
   const startFunction = async () => {
     // await loadDisconnect()
     const web3 = new Web3(speedy_nodes);
-    const isContract = new web3.eth.Contract(contract_abi, contract_address);
+    const isContract = new web3.eth.Contract(contract_updatedABI, contract_updatedAddress);
     setContract(isContract);
     setweb3global(web3);
   };
@@ -100,7 +100,7 @@ function App() {
             };
           } else {
             const web3 = new Web3(provider);
-            const isContract = new web3.eth.Contract(contract_abi, contract_address);
+            const isContract = new web3.eth.Contract(contract_updatedABI, contract_updatedAddress);
             setContract(isContract);
             setIsModal(true);
             const addresses = await web3.eth.getAccounts();
