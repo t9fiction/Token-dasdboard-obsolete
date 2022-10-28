@@ -4,9 +4,19 @@ export const speedy_nodes =
 export const chain_id = 1;
 export const contract_address = "0x4650cf21a9827bE194806f629F12e3116e0efCBF";
 export const contract_updatedAddress =
-  "0xD1cB3CF1A04FDCa07591Be69daa48e505b085B15";
+  "0x7e4Abd657ee633523D323fEe7D5a2d3F25f3a3Cb";
 export const contract_updatedABI = [
-  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "_vestingContractAddress",
+        type: "address",
+      },
+    ],
+    stateMutability: "nonpayable",
+    type: "constructor",
+  },
   {
     anonymous: false,
     inputs: [
@@ -73,6 +83,15 @@ export const contract_updatedABI = [
     type: "function",
   },
   {
+    inputs: [
+      { internalType: "address", name: "newContractAddress", type: "address" },
+    ],
+    name: "changeTokenContractAddress",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "newPrice", type: "uint256" }],
     name: "changeTokenPrice",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
@@ -135,6 +154,16 @@ export const contract_updatedABI = [
   },
   {
     inputs: [],
+    name: "getLowerAndUpperPurchasingLimitInETH",
+    outputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getVestingSchedule",
     outputs: [
       { internalType: "uint8", name: "", type: "uint8" },
@@ -157,13 +186,6 @@ export const contract_updatedABI = [
     inputs: [{ internalType: "address", name: "account", type: "address" }],
     name: "isWhitelisted",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "lowerPurchasingLimitInWei",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
@@ -192,27 +214,17 @@ export const contract_updatedABI = [
   },
   {
     inputs: [
-      { internalType: "uint256", name: "newLimitInWei", type: "uint256" },
+      { internalType: "uint256", name: "newLowerLimitInWei", type: "uint256" },
+      { internalType: "uint256", name: "newUpperLimitInWei", type: "uint256" },
     ],
-    name: "setLowerPurchasingLimitInETH",
+    name: "setLowerAndUpperPurchasingLimitInETH",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
-    inputs: [
-      { internalType: "uint256", name: "newLimitInToken", type: "uint256" },
-    ],
+    inputs: [{ internalType: "uint256", name: "newLimit", type: "uint256" }],
     name: "setTotalPurchasingLimitTokenCount",
-    outputs: [{ internalType: "bool", name: "", type: "bool" }],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "uint256", name: "newLimitInWei", type: "uint256" },
-    ],
-    name: "setUpperPurchasingLimitInETH",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
@@ -220,7 +232,7 @@ export const contract_updatedABI = [
   {
     inputs: [],
     name: "tokenContractAddress",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
@@ -256,15 +268,10 @@ export const contract_updatedABI = [
   },
   {
     inputs: [],
-    name: "upperPurchasingLimitInWei",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "vestingContractAddress",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
+    outputs: [
+      { internalType: "contract ITokenVestingFLYY", name: "", type: "address" },
+    ],
     stateMutability: "view",
     type: "function",
   },
