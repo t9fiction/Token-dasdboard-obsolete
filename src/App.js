@@ -25,7 +25,7 @@ function App() {
   console.log(referralCode);
 
     const addReferral = async (addt) => {
-        await axios.put(`/api/users/add/${referralCode}`, { referralCode, walletAddress: addt }).then(res => {
+        await axios.put(`https://referralfly.herokuapp.com/api/users/add/${referralCode}`, { referralCode, walletAddress: addt }).then(res => {
             if (res.statusText === "OK") {
                 swal("Success", "Referral added", "success");
             } else {
