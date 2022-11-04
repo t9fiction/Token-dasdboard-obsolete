@@ -20,7 +20,7 @@ function App() {
   const [web3Global, setweb3global] = useState();
   const [isModal, setIsModal] = useState(false);
 
-  const referralCode = window.location.pathname.split("?id=")[1];
+  const referralCode = window.location.pathname.split("/")[1];
   // console.log(referralCode);
 
   // This is the function that runs in the start and takes values from the config file and updates the starting vales.
