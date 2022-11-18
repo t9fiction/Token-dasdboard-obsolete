@@ -555,7 +555,7 @@ function App() {
                           <div className="h5 tooltip-calculate-result">
                             Avg. Price
                             <small className="text-muted">
-                              1 FLYY = 0.0000135 Ethereum (ETH)
+                              1 FLYY = 0.00002 Ethereum (ETH)
                             </small>
                           </div>
                         </div>
@@ -592,7 +592,7 @@ function App() {
                             <div className="col-7">
                               <div className="text-center text-primary">
                                 <p className="mb-0">1 FLYY = </p>
-                                <div className="h5">$0.02</div>
+                                <div className="h5">$0.025</div>
                                 <hr />
                                 <p className="mb-0 text-uppercase text-primary">
                                   Private round
@@ -677,12 +677,12 @@ function App() {
                                     Hard Cap:{" "}
                                   </small>
                                   <strong>
-                                    <span>$1,500,000</span>
+                                    <span>$1,875,000</span>
                                   </strong>
                                 </p>
                               </li>
                               {/* <li>
-                        <p><small class="text-muted">Private sale supply: </small><b>35,000,000 FLYY</b></p>
+                        <p><small class="text-muted">Private sale supply: </small><b>75,000,000 FLYY</b></p>
                       </li> */}
                               <li>
                                 <p>
@@ -722,7 +722,7 @@ function App() {
                               <li>
                                 <p>
                                   <small className="text-muted">Price: </small>
-                                  <b>1 FLYY = 0.02$</b>
+                                  <b>1 FLYY = 0.025$</b>
                                 </p>
                               </li>
                               {/* <li>
