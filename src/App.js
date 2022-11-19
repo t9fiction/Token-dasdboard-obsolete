@@ -14,7 +14,7 @@ function App() {
   const [contractTokenBalance, setcontractTokenBalance] = useState(0);
   const [tokenPriceInWei, settokenPriceInWei] = useState(0);
   const [progressPercentage, setProgressPercentage] = useState(0);
-  const [selectedEthValue, setselectedEthValue] = useState(0.0000135);
+  const [selectedEthValue, setselectedEthValue] = useState(0.00002);
   const [selectedEthValueinWei, setselectedEthValueinWei] = useState();
   const [tokensToGet, settokensToGet] = useState(0);
   const [web3Global, setweb3global] = useState();
@@ -162,24 +162,24 @@ function App() {
     // })
   }
   const onEthValueInputHandler = (e) => {
-    let temp = parseInt(e.target.value - 0.0000135);
+    let temp = parseInt(e.target.value - 0.00002);
     temp = temp + 1;
     temp = temp * parseInt(tokenPriceInWei);
     let value_in_ether = web3Global.utils.fromWei(temp.toString(), "ether");
 
-    if (parseFloat(value_in_ether) <= 0.0000135) {
+    if (parseFloat(value_in_ether) <= 0.00002) {
       return;
     }
     console.log(value_in_ether);
     setselectedEthValueinWei(temp);
     setselectedEthValue(parseFloat(value_in_ether));
-    settokensToGet(parseFloat(value_in_ether) / 0.0000135);
+    settokensToGet(parseFloat(value_in_ether) / 0.00002);
     //setMintValue(+e.target.value);
   };
   const onEthManuallyValueInputHandler = (e) => {
 
     setselectedEthValue(parseFloat(e.target.value));
-    settokensToGet(parseFloat(e.target.value) / 0.0000135);
+    settokensToGet(parseFloat(e.target.value) / 0.00002);
     setselectedEthValueinWei(web3Global.utils.toWei(e.target.value));
     //setMintValue(+e.target.value);
   };
@@ -265,7 +265,7 @@ function App() {
     let in_ether = contractEthBalance;
     let in_float = parseFloat(in_ether);
 
-    let total_bought = in_float / 0.0000135;
+    let total_bought = in_float / 0.00002;
     total_bought = Math.round(total_bought);
 
     let total_tokens = 75000000;
@@ -491,15 +491,15 @@ function App() {
                         </div> */}
                                 <form className="w-100">
                                   <div className="slider">
-                                    <span className="min-value">0.0000135</span>
+                                    <span className="min-value">0.00002</span>
                                     <div className="range">
                                       <input
                                         type="range"
                                         onChange={onEthValueInputHandler}
                                         className="form-range"
-                                        min={0.0000135}
+                                        min={0.00002}
                                         max={1000000}
-                                        defaultValue={0.0000135}
+                                        defaultValue={0.00002}
                                         required
                                       />
                                       {/* <span className="current-value">{selectedEthValue}</span> */}
@@ -513,7 +513,7 @@ function App() {
                                   type="number"
                                   onChange={onEthManuallyValueInputHandler}
                                   className="form-control"
-                                  min={0.0000135}
+                                  min={0.00002}
                                   max={1000000}
                                   defaultValue={selectedEthValue}
                                   value={selectedEthValue}
