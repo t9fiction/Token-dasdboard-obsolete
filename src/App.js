@@ -584,7 +584,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  <div className="mb-4 col-lg-4 col-md-12">
+                  /*<div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
                         <div className="card-body">
@@ -614,7 +614,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  /* <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
+                  <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
                     <div className="h-100 card">
                       <div className="py-4 card-header">
                         <h6 className="card-heading">
