@@ -681,9 +681,9 @@ function App() {
                                   </strong>
                                 </p>
                               </li>
-                              {/* <li>
+                              <li>
                         <p><small class="text-muted">Private sale supply: </small><b>75,000,000 FLYY</b></p>
-                      </li> */}
+                      </li>
                               <li>
                                 <p>
                                   <small className="text-muted">
@@ -725,16 +725,16 @@ function App() {
                                   <b>1 FLYY = 0.025$</b>
                                 </p>
                               </li>
-                              {/* <li>
+                              <li>
                         <p><b>1 FLYY = 0.048 BUSD</b><small class="text-muted"> - Allocation less than
                             $10,000</small></p>
-                      </li> */}
+                      </li>
                             </ul>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div> */}
+                  </div> */
                 </div>
               </section>
               {/* Graphs   End */}
