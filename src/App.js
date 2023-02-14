@@ -488,7 +488,7 @@ function App() {
                               </div>
                             </div>
                           </div>
-                        {/*</div>
+                        </div>*/}
                                 <form className="w-100">
                                   <div className="slider">
                                     <span className="min-value">0.00002</span>
@@ -734,8 +734,8 @@ function App() {
                         </div>
                       </div>
                     </div>
-                  </div> 
-                </div> */}
+                  </div>*/} 
+                </div> 
               </section>
               {/* Graphs   End */}
             </div>
