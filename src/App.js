@@ -421,7 +421,7 @@ function App() {
               <div className="private-sale">
                 <div className="page-header">
                   <h2 className="page-heading text-uppercase">
-                    Private round (WHITELIST OPENED)
+                    FlyGuyz Swap Box
                   </h2>
                 </div>
                 {/* <div class="note mb-5">
