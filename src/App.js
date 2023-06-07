@@ -585,7 +585,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  {/*<div className="mb-4 col-lg-4 col-md-12">
+                  <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
                         <div className="card-body">
@@ -735,7 +735,7 @@ function App() {
                         </div>
                       </div>
                     </div>
-                  </div>*/}
+                  </div>
                 </div>
               </section>
               {/* Graphs   End */}
