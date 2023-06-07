@@ -585,6 +585,8 @@ function App() {
                       </div>
                     </div>
                   </div>
+                  
+                  {/* Bottom page sale bar portion */}
                   <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
