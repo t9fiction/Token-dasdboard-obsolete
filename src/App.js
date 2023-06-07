@@ -739,6 +739,8 @@ function App() {
                     </div>
                   </div>
                 </div>
+                {/* End of sale bar portion */}
+                
               </section>
               {/* Graphs   End */}
             </div>
