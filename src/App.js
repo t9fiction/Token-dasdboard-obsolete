@@ -31,7 +31,7 @@ function App() {
     setweb3global(web3);
     console.log(isContract);
     console.log(web3);
-    setselectedEthValueinWei(0)
+    setselectedEthValueinWei(0);
   };
 
   const addReferral = async (addt) => {
@@ -177,7 +177,6 @@ function App() {
     //setMintValue(+e.target.value);
   };
   const onEthManuallyValueInputHandler = (e) => {
-
     setselectedEthValue(parseFloat(e.target.value));
     settokensToGet(parseFloat(e.target.value) / 0.00002);
     setselectedEthValueinWei(web3Global.utils.toWei(e.target.value));
@@ -223,7 +222,7 @@ function App() {
     }
   }
   async function buy() {
-    if (selectedEthValueinWei>0) {
+    if (selectedEthValueinWei > 0) {
       // const web3 = new Web3(Web3.givenProvider);
       // await Web3.givenProvider.enable();
       // const contract = new web3.eth.Contract(contract_abi, contract_address);
@@ -553,11 +552,13 @@ function App() {
                           </div>
                           <hr />
                           <div className="h5 tooltip-calculate-result">
-                            Avg. Price
+                            Round Price
                             <small className="text-muted">
                               1 FLYY = 0.00002 Ethereum (ETH)
                             </small>
                           </div>
+                          <p>Buy Before Price Increases To $0.020 FLYY</p>
+                          <p className="-mt-2">Listing Price $0.040</p>
                         </div>
                         <div className="text-end card-footer">
                           {!isWalletConnected && (
@@ -584,7 +585,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-{/*<div className="mb-4 col-lg-4 col-md-12">
+                  {/*<div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
                         <div className="card-body">
@@ -734,8 +735,8 @@ function App() {
                         </div>
                       </div>
                     </div>
-                  </div>*/} 
-                </div> 
+                  </div>*/}
+                </div>
               </section>
               {/* Graphs   End */}
             </div>
