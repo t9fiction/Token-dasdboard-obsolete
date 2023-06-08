@@ -136,19 +136,21 @@ function App() {
 
     contract.methods.getContractEthBalance().call((err, result) => {
       console.log("error: " + err);
+      let balance = 1000000000010
+      console.log("result",result)
       if (result != null) {
         setcontractEthBalance(result);
-        calculate_progress(result);
+        calculate_progress(balance);
       }
     });
-
+    
     contract.methods.getContractTokenBalance().call((err, result) => {
       console.log("error: " + err);
       if (result != null) {
         setcontractTokenBalance(result);
       }
     });
-
+    
     contract.methods.tokenPriceInWei().call((err, result) => {
       console.log("error: " + err);
       if (result != null) {
@@ -264,7 +266,7 @@ function App() {
     let in_ether = contractEthBalance;
     let in_float = parseFloat(in_ether);
 
-    let total_bought = in_float / 0.00002;
+    let total_bought = in_float * 0.00002;
     total_bought = Math.round(total_bought);
 
     let total_tokens = 75000000;
@@ -653,7 +655,7 @@ function App() {
                                 alt="FlyGuyz"
                               />
                               <span className="token-name">FLYY</span>
-                              <b className="token-value">75,000,000</b>
+                              <b className="token-value">62,160,000</b>
                             </span>
                           </div>
                         </div>
@@ -661,7 +663,7 @@ function App() {
                         <div className="mb-3 row">
                           <div className="col-lg-6">
                             <p>
-                              <b>Token details:</b>
+                              <b>Round details:</b>
                             </p>
                             <ul>
                               <li>
@@ -680,12 +682,12 @@ function App() {
                                     Hard Cap:{" "}
                                   </small>
                                   <strong>
-                                    <span>$1,875,000</span>
+                                    <span>$621,600</span>
                                   </strong>
                                 </p>
                               </li>
                               <li>
-                        <p><small class="text-muted">Private sale supply: </small><b>75,000,000 FLYY</b></p>
+                        <p><small class="text-muted">Pre-Sale Supply: </small><b>62,160,000 FLYY</b></p>
                       </li>
                               <li>
                                 <p>
@@ -699,7 +701,7 @@ function App() {
                           </div>
                           <div className="col-lg-6">
                             <p>
-                              <b>Round details:</b>
+                              <b className="opacity-0">Round details:</b>
                             </p>
                             <ul>
                               <li>
