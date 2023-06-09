@@ -596,6 +596,7 @@ function App() {
                   </div>
 
                   {/* Bottom page sale bar portion */}
+                  {/* Side table */}
                   <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
@@ -626,6 +627,7 @@ function App() {
                       </div>
                     </div>
                   </div>
+                  {/* end side table */}
                   <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
                     <div className="h-100 card">
                       <div className="py-4 card-header">
