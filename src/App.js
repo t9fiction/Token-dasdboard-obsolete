@@ -136,21 +136,23 @@ function App() {
 
     contract.methods.getContractEthBalance().call((err, result) => {
       console.log("error: " + err);
-      let balance = 1000000000010
-      console.log("result",result)
+      //added balance for testing.
+      let balance = 1000000000010;
+      console.log("result", result);
       if (result != null) {
         setcontractEthBalance(result);
+        //following balance should be replaced with the result that is received in the function
         calculate_progress(balance);
       }
     });
-    
+
     contract.methods.getContractTokenBalance().call((err, result) => {
       console.log("error: " + err);
       if (result != null) {
         setcontractTokenBalance(result);
       }
     });
-    
+
     contract.methods.tokenPriceInWei().call((err, result) => {
       console.log("error: " + err);
       if (result != null) {
@@ -556,11 +558,16 @@ function App() {
                           <div className="h5 tooltip-calculate-result">
                             Round Price
                             <small className="text-muted">
-                              1 FLYY = 0.00002 Ethereum (ETH)
+                              1 FLYY = $0.010 USD
                             </small>
                           </div>
-                          <p>Buy Before Price Increases To $0.020 FLYY</p>
-                          <p className="-mt-2">Listing Price $0.040</p>
+                          <div className="flex flex-row justify-between">
+                            <p>Buy Before Price Increases To $0.020 FLYY</p>
+                            <p>Pre-Sale / 1 FLYY = $0.040 Public Round</p>
+                          </div>
+                          <div className="flex flex-row justify-between">
+                            <p className="-mt-2">Listing Price $0.040</p>
+                          </div>
                         </div>
                         <div className="text-end card-footer">
                           {!isWalletConnected && (
@@ -587,7 +594,7 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  
+
                   {/* Bottom page sale bar portion */}
                   <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
@@ -676,7 +683,7 @@ function App() {
                                   </a>
                                 </p>
                               </li>
-                              <li>
+                              {/* <li>
                                 <p>
                                   <small className="text-muted">
                                     Hard Cap:{" "}
@@ -685,10 +692,15 @@ function App() {
                                     <span>$621,600</span>
                                   </strong>
                                 </p>
-                              </li>
-                              <li>
-                        <p><small class="text-muted">Pre-Sale Supply: </small><b>62,160,000 FLYY</b></p>
-                      </li>
+                              </li> */}
+                              {/* <li>
+                                <p>
+                                  <small class="text-muted">
+                                    Pre-Sale Supply:{" "}
+                                  </small>
+                                  <b>62,160,000 FLYY</b>
+                                </p>
+                              </li> */}
                               <li>
                                 <p>
                                   <small className="text-muted">
@@ -707,33 +719,36 @@ function App() {
                               <li>
                                 <p>
                                   <small className="text-muted">
-                                    Min. allocation:{" "}
+                                    Hard Cap:{" "}
                                   </small>
-                                  <b>
-                                    <span>$100</span>
-                                  </b>
+                                  <strong>
+                                    <span>$621,600</span>
+                                  </strong>
                                 </p>
                               </li>
                               <li>
                                 <p>
-                                  <small className="text-muted">
-                                    Max. allocation:{" "}
+                                  <small class="text-muted">
+                                    Pre-Sale Supply:{" "}
                                   </small>
-                                  <b>
-                                    <span>$50,000</span>
-                                  </b>
+                                  <b>62,160,000 FLYY</b>
                                 </p>
                               </li>
-                              <li>
+                              {/* <li>
                                 <p>
                                   <small className="text-muted">Price: </small>
                                   <b>1 FLYY = 0.025$</b>
                                 </p>
-                              </li>
-                              <li>
-                        <p><b>1 FLYY = 0.048 BUSD</b><small class="text-muted"> - Allocation less than
-                            $10,000</small></p>
-                      </li>
+                              </li> */}
+                              {/* <li>
+                                <p>
+                                  <b>1 FLYY = 0.048 BUSD</b>
+                                  <small class="text-muted">
+                                    {" "}
+                                    - Allocation less than $10,000
+                                  </small>
+                                </p>
+                              </li> */}
                             </ul>
                           </div>
                         </div>
@@ -742,7 +757,6 @@ function App() {
                   </div>
                 </div>
                 {/* End of sale bar portion */}
-                
               </section>
               {/* Graphs   End */}
             </div>
