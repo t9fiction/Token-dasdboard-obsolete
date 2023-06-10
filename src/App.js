@@ -607,7 +607,7 @@ function App() {
                                 <div className="h5">$0.010</div>
                                 <hr />
                                 <p className="mb-0 text-uppercase text-primary">
-                                  Private round
+                                  Pre-Sale
                                 </p>
                               </div>
                             </div>
