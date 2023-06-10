@@ -563,7 +563,6 @@ function App() {
                           </div>
                           <div className="flex flex-row justify-between">
                             <p>Buy Before Price Increases To $0.020 FLYY</p>
-                            <p>Pre-Sale / 1 FLYY = $0.040 Public Round</p>
                           </div>
                           <div className="flex flex-row justify-between">
                             <p className="-mt-2">Listing Price $0.040</p>
@@ -605,7 +604,7 @@ function App() {
                             <div className="col-7">
                               <div className="text-center text-primary">
                                 <p className="mb-0">1 FLYY = </p>
-                                <div className="h5">$0.025</div>
+                                <div className="h5">$0.010</div>
                                 <hr />
                                 <p className="mb-0 text-uppercase text-primary">
                                   Private round
@@ -615,7 +614,7 @@ function App() {
                             <div className="col-5">
                               <div className="text-center">
                                 <p className="text-muted mb-0">1 FLYY = </p>
-                                <div className="h5">$0.05</div>
+                                <div className="h5">$0.040</div>
                                 <hr />
                                 <p className="text-muted mb-0 text-uppercase">
                                   Public round
