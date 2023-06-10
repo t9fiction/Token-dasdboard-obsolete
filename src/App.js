@@ -713,7 +713,7 @@ function App() {
                             </ul>
                           </div>
                           <div className="col-lg-6">
-                            <p>
+                            <p className="hidden md:block">
                               <b className="opacity-0">Round details:</b>
                             </p>
                             <ul>
