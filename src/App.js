@@ -775,7 +775,7 @@ function App() {
                       <li>
                         <a
                           className="social-list-item social-discord"
-                          href="#"
+                          href="https://discord.gg/FlyGuyz"
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -785,7 +785,7 @@ function App() {
                       <li>
                         <a
                           className="social-list-item social-telegram"
-                          href="#"
+                          href="Https://t.me/flyguyzchat"
                           target="_blank"
                           rel="noreferrer"
                         >
@@ -795,7 +795,7 @@ function App() {
                       <li>
                         <a
                           className="social-list-item social-twitter"
-                          href="#"
+                          href="Https://twitter.com/FlyGuyzOfficial"
                           target="_blank"
                           rel="noreferrer"
                         >
