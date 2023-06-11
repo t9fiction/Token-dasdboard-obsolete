@@ -31,7 +31,7 @@ function App() {
     setweb3global(web3);
     console.log(isContract);
     console.log(web3);
-    setselectedEthValueinWei(0)
+    setselectedEthValueinWei(0);
   };
 
   const addReferral = async (addt) => {
@@ -136,9 +136,13 @@ function App() {
 
     contract.methods.getContractEthBalance().call((err, result) => {
       console.log("error: " + err);
+      //added balance for testing.
+      let balance = 1000000000010;
+      console.log("result", result);
       if (result != null) {
         setcontractEthBalance(result);
-        calculate_progress(result);
+        //following balance should be replaced with the result that is received in the function
+        calculate_progress(balance);
       }
     });
 
@@ -177,7 +181,6 @@ function App() {
     //setMintValue(+e.target.value);
   };
   const onEthManuallyValueInputHandler = (e) => {
-
     setselectedEthValue(parseFloat(e.target.value));
     settokensToGet(parseFloat(e.target.value) / 0.00002);
     setselectedEthValueinWei(web3Global.utils.toWei(e.target.value));
@@ -223,7 +226,7 @@ function App() {
     }
   }
   async function buy() {
-    if (selectedEthValueinWei>0) {
+    if (selectedEthValueinWei > 0) {
       // const web3 = new Web3(Web3.givenProvider);
       // await Web3.givenProvider.enable();
       // const contract = new web3.eth.Contract(contract_abi, contract_address);
@@ -265,7 +268,7 @@ function App() {
     let in_ether = contractEthBalance;
     let in_float = parseFloat(in_ether);
 
-    let total_bought = in_float / 0.00002;
+    let total_bought = in_float * 0.00002;
     total_bought = Math.round(total_bought);
 
     let total_tokens = 75000000;
@@ -553,10 +556,16 @@ function App() {
                           </div>
                           <hr />
                           <div className="h5 tooltip-calculate-result">
-                            Avg. Price
+                            Round Price
                             <small className="text-muted">
-                              1 FLYY = 0.00002 Ethereum (ETH)
+                              1 FLYY = $0.010 USD
                             </small>
+                          </div>
+                          <div className="flex flex-row justify-between">
+                            <p>Buy Before Price Increases To $0.020 FLYY</p>
+                          </div>
+                          <div className="flex flex-row justify-between">
+                            <p className="-mt-2">Listing Price $0.040</p>
                           </div>
                         </div>
                         <div className="text-end card-footer">
@@ -584,7 +593,10 @@ function App() {
                       </div>
                     </div>
                   </div>
-{/*<div className="mb-4 col-lg-4 col-md-12">
+
+                  {/* Bottom page sale bar portion */}
+                  {/* Side table */}
+                  <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
                         <div className="card-body">
@@ -592,17 +604,17 @@ function App() {
                             <div className="col-7">
                               <div className="text-center text-primary">
                                 <p className="mb-0">1 FLYY = </p>
-                                <div className="h5">$0.025</div>
+                                <div className="h5">$0.010</div>
                                 <hr />
                                 <p className="mb-0 text-uppercase text-primary">
-                                  Private round
+                                  Pre-Sale
                                 </p>
                               </div>
                             </div>
                             <div className="col-5">
                               <div className="text-center">
                                 <p className="text-muted mb-0">1 FLYY = </p>
-                                <div className="h5">$0.05</div>
+                                <div className="h5">$0.040</div>
                                 <hr />
                                 <p className="text-muted mb-0 text-uppercase">
                                   Public round
@@ -614,6 +626,7 @@ function App() {
                       </div>
                     </div>
                   </div>
+                  {/* end side table */}
                   <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
                     <div className="h-100 card">
                       <div className="py-4 card-header">
@@ -650,7 +663,7 @@ function App() {
                                 alt="FlyGuyz"
                               />
                               <span className="token-name">FLYY</span>
-                              <b className="token-value">75,000,000</b>
+                              <b className="token-value">62,160,000</b>
                             </span>
                           </div>
                         </div>
@@ -658,7 +671,7 @@ function App() {
                         <div className="mb-3 row">
                           <div className="col-lg-6">
                             <p>
-                              <b>Token details:</b>
+                              <b>Round details:</b>
                             </p>
                             <ul>
                               <li>
@@ -671,19 +684,24 @@ function App() {
                                   </a>
                                 </p>
                               </li>
-                              <li>
+                              {/* <li>
                                 <p>
                                   <small className="text-muted">
                                     Hard Cap:{" "}
                                   </small>
                                   <strong>
-                                    <span>$1,875,000</span>
+                                    <span>$621,600</span>
                                   </strong>
                                 </p>
-                              </li>
-                              <li>
-                        <p><small class="text-muted">Private sale supply: </small><b>75,000,000 FLYY</b></p>
-                      </li>
+                              </li> */}
+                              {/* <li>
+                                <p>
+                                  <small class="text-muted">
+                                    Pre-Sale Supply:{" "}
+                                  </small>
+                                  <b>62,160,000 FLYY</b>
+                                </p>
+                              </li> */}
                               <li>
                                 <p>
                                   <small className="text-muted">
@@ -695,47 +713,51 @@ function App() {
                             </ul>
                           </div>
                           <div className="col-lg-6">
-                            <p>
-                              <b>Round details:</b>
+                            <p className="hidden md:block">
+                              <b className="opacity-0">Round details:</b>
                             </p>
                             <ul>
                               <li>
                                 <p>
                                   <small className="text-muted">
-                                    Min. allocation:{" "}
+                                    Hard Cap:{" "}
                                   </small>
-                                  <b>
-                                    <span>$100</span>
-                                  </b>
+                                  <strong>
+                                    <span>$621,600</span>
+                                  </strong>
                                 </p>
                               </li>
                               <li>
                                 <p>
-                                  <small className="text-muted">
-                                    Max. allocation:{" "}
+                                  <small class="text-muted">
+                                    Pre-Sale Supply:{" "}
                                   </small>
-                                  <b>
-                                    <span>$50,000</span>
-                                  </b>
+                                  <b>62,160,000 FLYY</b>
                                 </p>
                               </li>
-                              <li>
+                              {/* <li>
                                 <p>
                                   <small className="text-muted">Price: </small>
                                   <b>1 FLYY = 0.025$</b>
                                 </p>
-                              </li>
-                              <li>
-                        <p><b>1 FLYY = 0.048 BUSD</b><small class="text-muted"> - Allocation less than
-                            $10,000</small></p>
-                      </li>
+                              </li> */}
+                              {/* <li>
+                                <p>
+                                  <b>1 FLYY = 0.048 BUSD</b>
+                                  <small class="text-muted">
+                                    {" "}
+                                    - Allocation less than $10,000
+                                  </small>
+                                </p>
+                              </li> */}
                             </ul>
                           </div>
                         </div>
                       </div>
                     </div>
-                  </div>*/} 
-                </div> 
+                  </div>
+                </div>
+                {/* End of sale bar portion */}
               </section>
               {/* Graphs   End */}
             </div>
