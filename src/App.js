@@ -6,6 +6,7 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import { contract_address, contract_abi, speedy_nodes } from "./config";
+
 function App() {
   const [isWalletConnected, setisWalletConnected] = useState(false);
   const [connectBtnText, setConnectBtnText] = useState("Connect Wallet");
@@ -59,7 +60,7 @@ function App() {
 
   useEffect(() => {
     //connect_wallet();
-    if (!isModal && web3Global != "" && contract) {
+    if (!isModal && web3Global !== "" && contract) {
       // console.log("loaded web3 : ",web3Global);
       // console.log("contract loaded : ",contract)
       fetch_data();
@@ -335,6 +336,48 @@ function App() {
               alt="FlyGuyz"
             />
           </a>
+
+          {/* Start of Menu Bar */}
+          <div className="hidden md:block col-auto navbar-main ms-auto px-0 px-md-2 py-2 rounded-2xl bg-[#391883] ">
+            <ul className="navbar-nav flex-column flex-md-row ms-auto align-items-center">
+              <li className="nav-item hover:text-black">
+                <a className="nav-link text-base text-white hover:text-[#3ce66f] " href="https://www.flyguyz.io/index.html">
+                  Home
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-white text-base hover:text-[#3ce66f] " href="https://dashboard.flyguyz.io/">
+                  Token Sale
+                </a>
+              </li>
+              <li className="nav-item hover:text-[#3ce66f] ">
+                <a className="nav-link text-white text-base " href="https://claim.flyguyz.io/">
+                  Claim
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-white text-base " href="https://referral.flyguyz.io/">
+                  Referral
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-white text-base " href="litepaper.html">
+                  Litepaper
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-white text-base " href="https://whitepaper.flyguyz.io/">
+                  Whitepaper
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-white text-base " href="index.html#roadmap">
+                  Roadmap
+                </a>
+              </li>
+            </ul>
+          </div>
+          {/* End of Menu bar */}
           <ul className="navbar-nav ms-auto mb-lg-0">
             <li className="nav-item">
               <a
