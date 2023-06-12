@@ -338,45 +338,68 @@ function App() {
           </a>
 
           {/* Start of Menu Bar */}
-          <div className="hidden md:block col-auto navbar-main ms-auto px-0 px-md-2 py-2 rounded-2xl bg-[#391883] ">
-            <ul className="navbar-nav flex-column flex-md-row ms-auto align-items-center">
-              <li className="nav-item hover:text-black">
-                <a className="nav-link text-base text-white hover:text-[#3ce66f] " href="https://www.flyguyz.io/index.html">
+          {/* <div className="bg-[#391883] z-10"> */}
+          <div className="hidden lg:flex col-auto navbar-main ms-auto px-4 py-3 rounded-2xl bg-[#391883] ">
+            <ul className="navbar-nav text-white flex-column flex-md-row ms-auto align-items-center space-x-4">
+              <li className="nav-item ">
+                <a
+                  className="nav-link-top text-base font-bold no-underline"
+                  href="https://www.flyguyz.io/"
+                >
                   Home
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white text-base hover:text-[#3ce66f] " href="https://dashboard.flyguyz.io/">
+                <a
+                  className="nav-link-top font-bold no-underline text-base "
+                  href="https://dashboard.flyguyz.io/"
+                >
                   Token Sale
                 </a>
               </li>
               <li className="nav-item hover:text-[#3ce66f] ">
-                <a className="nav-link text-white text-base " href="https://claim.flyguyz.io/">
+                <a
+                  className="nav-link-top  text-base font-bold no-underline"
+                  href="https://claim.flyguyz.io/"
+                >
                   Claim
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white text-base " href="https://referral.flyguyz.io/">
+                <a
+                  className="nav-link-top font-bold text-base no-underline"
+                  href="https://referral.flyguyz.io/"
+                >
                   Referral
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white text-base " href="litepaper.html">
+                <a
+                  className="nav-link-top font-bold text-base no-underline"
+                  href="https://fly-guyz.vercel.app/litepaper.html"
+                >
                   Litepaper
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white text-base " href="https://whitepaper.flyguyz.io/">
+                <a
+                  className="nav-link-top font-bold text-base no-underline"
+                  href="https://whitepaper.flyguyz.io/"
+                >
                   Whitepaper
                 </a>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-white text-base " href="index.html#roadmap">
+                <a
+                  className="nav-link-top font-bold text-base no-underline"
+                  href="https://flyguyz.io#roadmap"
+                >
                   Roadmap
                 </a>
               </li>
             </ul>
           </div>
+          {/* </div> */}
           {/* End of Menu bar */}
           <ul className="navbar-nav ms-auto mb-lg-0">
             <li className="nav-item">

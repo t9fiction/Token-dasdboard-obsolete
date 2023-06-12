@@ -185,6 +185,14 @@ h1, h2, h3, h4, h5, h6 {
   fill: var(--c_pink);
 }
 
+.nav-link-top{
+  display: flex;
+  flex-direction: row;
+  color: var(--c_white);
+  
+  transition: all 0.45s ease;
+}
+
 .sidebar .sidebar-block .nav-link {
   display: flex;
   flex-direction: row;
@@ -204,6 +212,10 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .sidebar .sidebar-block .nav-link:hover {
+  transition: color 0.45s ease;
+  color: var(--c_pink);
+}
+.nav-link-top:hover {
   transition: color 0.45s ease;
   color: var(--c_pink);
 }
