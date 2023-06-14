@@ -6,7 +6,7 @@ import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import { contract_address, contract_abi, speedy_nodes } from "./config";
-import { IoMdClose } from 'react-icons/io';
+import { IoMdClose } from "react-icons/io";
 
 function App() {
   const [isWalletConnected, setisWalletConnected] = useState(false);
@@ -326,8 +326,12 @@ function App() {
       {/* Header Start */}
       <nav className="navbar navbar-expand-lg">
         <div className="container-xxl flex-nowrap">
-          <div id="sideBarNav" className="sidebar-nav me-2 me-md-5" onClick={onClickNav}>
-            <a id="sideBarBtn" href="javascript:void(0)" >
+          <div
+            id="sideBarNav"
+            className="sidebar-nav me-2 me-md-5"
+            onClick={onClickNav}
+          >
+            <a id="sideBarBtn" href="javascript:void(0)">
               <span />
               <span />
               <span />
@@ -419,11 +423,16 @@ function App() {
           </ul>
         </div>
         {/* Start */}
-        <div className= {!nav ? "flex absolute top-16 left-0 right-0 px-2 z-10 flex-col opacity-90 md:hidden col-auto ease-in-out duration-300 navbar-main ms-auto py-3 rounded-2xl " : "absolute flex -top-200 bottom-20 left-0 right-0 ease-in-out duration-200"}>
-          
+        <div
+          className={
+            nav
+              ? "flex absolute top-16 left-0 right-0 px-2 z-10 flex-col opacity-90 md:hidden col-auto ease-in-out duration-300 navbar-main ms-auto py-3 rounded-2xl "
+              : "absolute flex -top-200 bottom-20 left-0 right-0 ease-in-out duration-200"
+          }
+        >
           <ul className="navbar-nav text-white flex-column  mx-auto py-12 rounded-2xl align-items-center bg-[#391883] w-[90vw] space-y-12 ">
             <button className="absolute right-10 top-9" onClick={onClickNav}>
-            <IoMdClose size={40} />
+              <IoMdClose size={40} />
             </button>
 
             <li className="nav-item ">
@@ -448,6 +457,7 @@ function App() {
               <a
                 className="nav-link-top  text-base font-bold no-underline"
                 href="https://claim.flyguyz.io/"
+                onClick={onClickNav}
               >
                 Claim
               </a>
@@ -456,6 +466,7 @@ function App() {
               <a
                 className="nav-link-top font-bold text-base no-underline"
                 href="https://referral.flyguyz.io/"
+                onClick={onClickNav}
               >
                 Referral
               </a>
@@ -464,6 +475,7 @@ function App() {
               <a
                 className="nav-link-top font-bold text-base no-underline"
                 href="https://fly-guyz.vercel.app/litepaper.html"
+                onClick={onClickNav}
               >
                 Litepaper
               </a>
@@ -472,6 +484,7 @@ function App() {
               <a
                 className="nav-link-top font-bold text-base no-underline"
                 href="https://whitepaper.flyguyz.io/"
+                onClick={onClickNav}
               >
                 Whitepaper
               </a>
@@ -480,6 +493,7 @@ function App() {
               <a
                 className="nav-link-top font-bold text-base no-underline"
                 href="https://flyguyz.io#roadmap"
+                onClick={onClickNav}
               >
                 Roadmap
               </a>
