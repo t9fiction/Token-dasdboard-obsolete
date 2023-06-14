@@ -426,12 +426,12 @@ function App() {
         <div
           className={
             nav
-              ? "flex absolute top-16 left-0 right-0 px-2 z-10 flex-col opacity-90 md:hidden col-auto ease-in-out duration-300 navbar-main ms-auto py-3 rounded-2xl "
-              : "absolute flex -top-200 bottom-20 left-0 right-0 ease-in-out duration-200"
+              ? "flex fixed top-0 left-0 right-0 px-2 z-10 flex-col opacity-90 md:hidden col-auto ease-in-out duration-300 navbar-main ms-auto py-3 rounded-2xl transform translate-y-0"
+              : "fixed top-0 left-0 right-0 ease-in-out duration-200 transform -translate-y-full"
           }
         >
-          <ul className="navbar-nav text-white flex-column  mx-auto py-12 rounded-2xl align-items-center bg-[#391883] w-[90vw] space-y-12 ">
-            <button className="absolute right-10 top-9" onClick={onClickNav}>
+          <ul className="navbar-nav text-white flex-column pb-16 mx-auto py-12 rounded-2xl align-items-center bg-[#391883] w-[90vw] space-y-12 ">
+            <button className="absolute right-14 top-10" onClick={onClickNav}>
               <IoMdClose size={40} />
             </button>
 
