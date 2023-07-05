@@ -148,7 +148,7 @@ function App() {
       if (result != null) {
         setcontractEthBalance(result);
         //following balance should be replaced with the result that is received in the function
-        calculate_progress(balance);
+        calculate_progress(result);
       }
     });
 
