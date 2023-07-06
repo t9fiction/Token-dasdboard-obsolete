@@ -7,6 +7,9 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import { contract_address, contract_abi, speedy_nodes } from "./config";
 import { IoMdClose } from "react-icons/io";
+import Footer from "./component/Footer";
+import PercentageBar from "./component/PercentageBar";
+import Sidebar from "./component/Sidebar";
 
 function App() {
   const [isWalletConnected, setisWalletConnected] = useState(false);
@@ -507,62 +510,7 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-stretch">
           {/* Sidebar Start */}
-          <div id="sideBar" className="sidebar py-4 col-auto">
-            <div className="sidebar-block">
-              <ul className="navbar-nav">
-                <li className="nav-item">
-                  <a href="#" className="nav-link">
-                    <i className="icon">
-                      <img
-                        src="img/icons/tokenization.svg"
-                        alt="Buy Tokens"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Buy Tokens</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="https://www.flyguyz.io/" className="nav-link">
-                    <i className="icon">
-                      <img
-                        src="img/icons/home.svg"
-                        alt="Home"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Home</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    href="https://www.flyguyz.io/litepaper.html"
-                    className="nav-link"
-                  >
-                    <i className="icon">
-                      <img
-                        src="img/icons/bird.svg"
-                        alt="Litepaper"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Litepaper</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    href="https://www.flyguyz.io/index.html#roadmap"
-                    className="nav-link"
-                  >
-                    <i className="icon">
-                      <img src="img/icons/track.svg" alt="Roadmap" />
-                    </i>
-                    <span>Roadmap</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <Sidebar />
           {/* Sidebar   End */}
           {/* Other Page Start */}
           <div className="col pt-4">
@@ -781,231 +729,14 @@ function App() {
                     </div>
                   </div>
                   {/* end side table */}
-                  <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
-                    <div className="h-100 card">
-                      <div className="py-4 card-header">
-                        <h6 className="card-heading">
-                          Private sale Fundraising
-                        </h6>
-                      </div>
-                      <div className="pt-3 pb-0 card-body">
-                        <div className="h2 mb-3 text-accent text-uppercase">
-                          {progressPercentage}
-                        </div>
-                        <div className="align-items-center mb-3 row">
-                          <div className="fundraising-element mb-3 mb-md-0 text-muted fw-bold text-round col-lg-2 col-md-2">
-                            Completed
-                          </div>
-                          <div className="fundraising-element mb-3 mb-md-0 col-lg-7 col-md-6">
-                            <div className="progress">
-                              <div
-                                role="progressbar"
-                                className="progress-bar bg-green progress-bar-animated progress-bar-striped"
-                                aria-valuenow={0}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                style={{ width: progressPercentage }}
-                              >
-                                {progressPercentage}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="fundraising-element text-muted fw-bold col-lg-3 col-md-4">
-                            <span className="token token-with-ticker">
-                              <img
-                                src="img/icons/flyguyz-icon.png"
-                                alt="FlyGuyz"
-                              />
-                              <span className="token-name">FLYY</span>
-                              <b className="token-value">62,160,000</b>
-                            </span>
-                          </div>
-                        </div>
-                        <hr />
-                        <div className="mb-3 row">
-                          <div className="col-lg-6">
-                            <p>
-                              <b>Round details:</b>
-                            </p>
-                            <ul>
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Token Symbol:{" "}
-                                  </small>
-                                  <a href="#" target="_blank" rel="noreferrer">
-                                    <b>$FLYY</b>
-                                  </a>
-                                </p>
-                              </li>
-                              {/* <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Hard Cap:{" "}
-                                  </small>
-                                  <strong>
-                                    <span>$621,600</span>
-                                  </strong>
-                                </p>
-                              </li> */}
-                              {/* <li>
-                                <p>
-                                  <small class="text-muted">
-                                    Pre-Sale Supply:{" "}
-                                  </small>
-                                  <b>62,160,000 FLYY</b>
-                                </p>
-                              </li> */}
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Max supply:{" "}
-                                  </small>
-                                  <b>888,000,000 FLYY</b>
-                                </p>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="col-lg-6">
-                            <p className="hidden md:block">
-                              <b className="opacity-0">Round details:</b>
-                            </p>
-                            <ul>
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Hard Cap:{" "}
-                                  </small>
-                                  <strong>
-                                    <span>$621,600</span>
-                                  </strong>
-                                </p>
-                              </li>
-                              <li>
-                                <p>
-                                  <small class="text-muted">
-                                    Pre-Sale Supply:{" "}
-                                  </small>
-                                  <b>62,160,000 FLYY</b>
-                                </p>
-                              </li>
-                              {/* <li>
-                                <p>
-                                  <small className="text-muted">Price: </small>
-                                  <b>1 FLYY = 0.025$</b>
-                                </p>
-                              </li> */}
-                              {/* <li>
-                                <p>
-                                  <b>1 FLYY = 0.048 BUSD</b>
-                                  <small class="text-muted">
-                                    {" "}
-                                    - Allocation less than $10,000
-                                  </small>
-                                </p>
-                              </li> */}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PercentageBar progressPercentage={progressPercentage} />
                 </div>
                 {/* End of sale bar portion */}
               </section>
               {/* Graphs   End */}
             </div>
             {/* Footer Start */}
-            <footer className="footer align-self-end py-3 px-xl-5 w-100">
-              <div className="container-fluid">
-                <div className="row">
-                  <div className="col-md-3">
-                    <div className="copyright justify-content-center justify-content-md-start fw-bold">
-                      <p className="mb-3 mb-md-0">FlyGuyz © 2022</p>
-                    </div>
-                  </div>
-                  <div className="text-center text-md-start fw-bold col-md-6">
-                    <ul className="social-list">
-                      <li>
-                        <a
-                          className="social-list-item social-discord"
-                          href="https://discord.gg/FlyGuyz"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-discord" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-telegram"
-                          href="Https://t.me/flyguyzchat"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-telegram" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-twitter"
-                          href="Https://twitter.com/FlyGuyzOfficial"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-twitter" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-binance"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-binance" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-opensea"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-opensea" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-cmc"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-cmc" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-linktree"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-linktree" />
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-center text-md-end text-gray-400 col-md-3">
-                    <div className="mb-0 version justify-content-center justify-content-md-start mt-3 mt-md-0">
-                      <p>Version 1.0.0</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </footer>
+            <Footer />
             {/* Footer   End */}
           </div>
           {/* Other Page   End */}
