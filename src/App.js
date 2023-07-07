@@ -55,6 +55,10 @@ function App() {
     chain: mainnet,
     transport: http(),
   });
+  const client = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum),
+  });
 
   const onClickNav = () => {
     setNav(!nav);
@@ -92,11 +96,6 @@ function App() {
 
       addReferral(address);
       // setweb3global(web3);
-
-      const client = createWalletClient({
-        chain: mainnet,
-        transport: custom(window.ethereum),
-      });
 
       // 1. Create contract instance
       const contract = getContract({
@@ -270,6 +269,27 @@ function App() {
       }
     }
   }
+
+  //-----------------
+  const buyWithEth = async () => {
+    if (selectedEthValueinWei > 0) {
+      try {
+        const { request } = await publicClient.simulateContract({
+          account: address,
+          address: contract_address,
+          abi: contract_abi,
+          functionName: "buyTokenInETH",
+        });
+        console.log(request,"request")
+        await client.writeContract(request);
+      } catch (e) {
+        show_error_alert(e);
+      }
+    } else {
+      swal.fire("Please select the no of Tokens to buy");
+    }
+  };
+  //-----------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
       // const web3 = new Web3(Web3.givenProvider);
