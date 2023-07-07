@@ -2,19 +2,9 @@
 export const speedy_nodes =
   "https://mainnet.infura.io/v3/2b771ee38e924a389a4d2786a1f11caf";
 export const chain_id = 1;
-export const contract_address = "0x7e4Abd657ee633523D323fEe7D5a2d3F25f3a3Cb";
+export const contract_address = "0x0310aC0D0b528a63ad4Bb2AF5207c6F3C775Bb76";
 export const contract_abi = [
-  {
-    inputs: [
-      {
-        internalType: "address",
-        name: "_vestingContractAddress",
-        type: "address",
-      },
-    ],
-    stateMutability: "nonpayable",
-    type: "constructor",
-  },
+  { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
     anonymous: false,
     inputs: [
@@ -40,7 +30,16 @@ export const contract_abi = [
       { indexed: false, internalType: "uint256", name: "", type: "uint256" },
       { indexed: false, internalType: "uint256", name: "", type: "uint256" },
     ],
-    name: "PriceChanged",
+    name: "PriceChangedInETH",
+    type: "event",
+  },
+  {
+    anonymous: false,
+    inputs: [
+      { indexed: false, internalType: "uint256", name: "", type: "uint256" },
+      { indexed: false, internalType: "uint256", name: "", type: "uint256" },
+    ],
+    name: "PriceChangedInUSDT",
     type: "event",
   },
   {
@@ -69,29 +68,43 @@ export const contract_abi = [
     inputs: [
       { indexed: false, internalType: "bool", name: "flag", type: "bool" },
     ],
-    name: "whitelistingSwitchTriggered",
+    name: "WhitelistingSwitchTriggered",
     type: "event",
   },
   { stateMutability: "payable", type: "fallback" },
   {
     inputs: [],
-    name: "buyToken",
+    name: "buyTokenInETH",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "payable",
     type: "function",
   },
   {
+    inputs: [],
+    name: "buyTokenInUSDT",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
-      { internalType: "address", name: "newContractAddress", type: "address" },
+      { internalType: "uint256", name: "_claimStartTimeTGE", type: "uint256" },
     ],
-    name: "changeTokenContractAddress",
+    name: "changeClaimStartTimeTGE",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [{ internalType: "uint256", name: "newPrice", type: "uint256" }],
-    name: "changeTokenPrice",
+    name: "changeTokenPriceInETH",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "uint256", name: "newPrice", type: "uint256" }],
+    name: "changeTokenPriceInUSDT",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
@@ -107,17 +120,40 @@ export const contract_abi = [
   },
   {
     inputs: [
-      { internalType: "uint8", name: "_unlockedPercentageTGE", type: "uint8" },
-      { internalType: "uint256", name: "_vestingCliff", type: "uint256" },
-      { internalType: "uint256", name: "_vestingStart", type: "uint256" },
-      { internalType: "uint256", name: "_vestingDuration", type: "uint256" },
+      { internalType: "uint8", name: "unlockedPercentageTGE_", type: "uint8" },
+      { internalType: "uint256", name: "vestingStart_", type: "uint256" },
+      { internalType: "uint256", name: "vestingCliff_", type: "uint256" },
+      { internalType: "uint256", name: "vestingDuration_", type: "uint256" },
       {
         internalType: "uint256",
-        name: "_vestingSlicePeriodSeconds",
+        name: "vestingSlicePeriodSeconds_",
         type: "uint256",
       },
     ],
     name: "changeVestingSchedule",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "address", name: "newContractAddress", type: "address" },
+    ],
+    name: "changetokenContractAddressFLYY",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimStartTimeTGE",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "claimTGE",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
@@ -131,14 +167,21 @@ export const contract_abi = [
   },
   {
     inputs: [],
-    name: "getContractEthBalance",
+    name: "getContractBalanceETH",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "getContractTokenBalance",
+    name: "getContractBalanceFLYY",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getContractBalanceUSDT",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -153,6 +196,16 @@ export const contract_abi = [
   {
     inputs: [],
     name: "getLowerAndUpperPurchasingLimitInETH",
+    outputs: [
+      { internalType: "uint256", name: "", type: "uint256" },
+      { internalType: "uint256", name: "", type: "uint256" },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getLowerAndUpperPurchasingLimitInUSDT",
     outputs: [
       { internalType: "uint256", name: "", type: "uint256" },
       { internalType: "uint256", name: "", type: "uint256" },
@@ -211,11 +264,28 @@ export const contract_abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "resetTotalTokensSold",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [
-      { internalType: "uint256", name: "newLowerLimitInWei", type: "uint256" },
-      { internalType: "uint256", name: "newUpperLimitInWei", type: "uint256" },
+      { internalType: "uint256", name: "newLowerLimitInWEI", type: "uint256" },
+      { internalType: "uint256", name: "newUpperLimitInWEI", type: "uint256" },
     ],
     name: "setLowerAndUpperPurchasingLimitInETH",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [
+      { internalType: "uint256", name: "newLowerLimitInUSDT", type: "uint256" },
+      { internalType: "uint256", name: "newUpperLimitInUSDT", type: "uint256" },
+    ],
+    name: "setLowerAndUpperPurchasingLimitInUSDT",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",
@@ -229,14 +299,28 @@ export const contract_abi = [
   },
   {
     inputs: [],
-    name: "tokenContractAddress",
+    name: "tokenContractAddressFLYY",
     outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "tokenPriceInWei",
+    name: "tokenContractAddressUSDT",
+    outputs: [{ internalType: "contract IERC20", name: "", type: "address" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokenPriceInUSDT",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "tokenPriceInWEI",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -258,10 +342,31 @@ export const contract_abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "totalTokenSold",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "address", name: "newOwner", type: "address" }],
     name: "transferOwnership",
     outputs: [],
     stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "userBalanceOfTGE",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [{ internalType: "address", name: "", type: "address" }],
+    name: "userClaimStartTimeTGE",
+    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
+    stateMutability: "view",
     type: "function",
   },
   {
@@ -288,15 +393,22 @@ export const contract_abi = [
     type: "function",
   },
   {
+    inputs: [],
+    name: "withdrawBalanceETH",
+    outputs: [{ internalType: "bool", name: "", type: "bool" }],
+    stateMutability: "nonpayable",
+    type: "function",
+  },
+  {
     inputs: [{ internalType: "uint256", name: "amount", type: "uint256" }],
-    name: "withdrawContractTokenBalance",
+    name: "withdrawBalanceFLYY",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
   },
   {
     inputs: [],
-    name: "withdrawEthBalance",
+    name: "withdrawBalanceUSDT",
     outputs: [{ internalType: "bool", name: "", type: "bool" }],
     stateMutability: "nonpayable",
     type: "function",

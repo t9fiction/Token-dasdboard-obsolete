@@ -2,15 +2,29 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import swal from "sweetalert2";
 import Web3 from "web3";
-import Web3Modal from "web3modal";
-import WalletConnectProvider from "@walletconnect/web3-provider";
-import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import { contract_address, contract_abi, speedy_nodes } from "./config";
 import { IoMdClose } from "react-icons/io";
+import Web3Provider from "@walletconnect/web3-provider";
+import { useWeb3Modal, Web3Modal } from "@web3modal/react";
+import { mainnet, useAccount, useConnect, useNetwork } from "wagmi";
+import { useContractInfiniteReads } from "wagmi";
+import { getContract, parseEther } from "viem";
+import { createWalletClient, custom, createPublicClient, http } from "viem";
+import { goerli } from "viem/chains";
+import Footer from "./component/Footer";
+import PercentageBar from "./component/PercentageBar";
+import Sidebar from "./component/Sidebar";
+import { initializationFunction } from "./component/wert";
+import MenuBar from "./component/MenuBar";
+
 
 function App() {
+  const { open, close } = useWeb3Modal();
+  const { address, isConnected } = useAccount();
+  const { connectors, error, isLoading, pendingConnector } = useConnect();
+  const { chain } = useNetwork();
+
   const [isWalletConnected, setisWalletConnected] = useState(false);
-  const [connectBtnText, setConnectBtnText] = useState("Connect Wallet");
   const [contract, setContract] = useState();
   const [contractEthBalance, setcontractEthBalance] = useState(0);
   const [contractTokenBalance, setcontractTokenBalance] = useState(0);
@@ -22,6 +36,8 @@ function App() {
   const [web3Global, setweb3global] = useState();
   const [isModal, setIsModal] = useState(false);
   const [nav, setNav] = useState(false);
+  const [soldTokens, setSoldTokens] = useState(0);
+  const [tokenPriceInUSDT, settokenPriceInUSDT] = useState(0);
 
   const referralCode = window.location.pathname.split("/")[1];
   // console.log(referralCode);
@@ -32,10 +48,19 @@ function App() {
     const isContract = new web3.eth.Contract(contract_abi, contract_address);
     setContract(isContract);
     setweb3global(web3);
-    console.log(isContract);
-    console.log(web3);
     setselectedEthValueinWei(0);
+    console.log(window.ethereum, "window.ethereum");
   };
+
+  //Public Client for reading contract
+  const publicClient = createPublicClient({
+    chain: mainnet,
+    transport: http(),
+  });
+  const client = createWalletClient({
+    chain: mainnet,
+    transport: custom(window.ethereum),
+  });
 
   const onClickNav = () => {
     setNav(!nav);
@@ -63,113 +88,128 @@ function App() {
     func();
   }, []);
 
+  //
   useEffect(() => {
-    //connect_wallet();
-    if (!isModal && web3Global !== "" && contract) {
-      // console.log("loaded web3 : ",web3Global);
-      // console.log("contract loaded : ",contract)
-      fetch_data();
-    }
-  }, [web3Global, contract]);
+    async function handleConnection() {
+      // const isContract = new web3.eth.Contract(contract_abi, contract_address);
 
-  async function connect_wallet() {
-    // if (Web3.givenProvider) {
-    const web3Modal = new Web3Modal({
-      network: "mainnet", // optional
-      cacheProvider: true, // optional
-      providerOptions: {
-        walletconnect: {
-          package: WalletConnectProvider, // required
-          options: {
-            infuraId: "3ca1583421a74069b07075f209879afb", // required
-            // "17342b0f3f344d2d96c2c89c5fddc959", // required
-          },
-        },
-        coinbasewallet: {
-          package: CoinbaseWalletSDK, // Required
-          options: {
-            appName: "FlyGuyz", // Required
-            infuraId: "3ca1583421a74069b07075f209879afb", // Required
-            rpc: "", // Optional if `infuraId` is provided; otherwise it's required
-            chainId: 1, // Optional. It defaults to 1 if not provided
-            darkMode: false, // Optional. Use dark theme, defaults to false
-          },
-        },
-      },
-    });
-
-    const provider = await web3Modal.connect();
-
-    if (!provider) {
-      return {
-        web3LoadingErrorMessage: "Error in connecting Wallet",
-      };
-    } else {
-      const web3 = new Web3(provider);
-
-      const isContract = new web3.eth.Contract(contract_abi, contract_address);
-      setContract(isContract);
-
-      const addresses = await web3.eth.getAccounts();
-      const address = addresses[0];
-
-      setisWalletConnected(true);
-      setConnectBtnText("Connected");
+      // const addresses = await web3.eth.getAccounts();
+      // const address = addresses[0];
 
       addReferral(address);
+      // setweb3global(web3);
 
-      setweb3global(web3);
-      //   contract.methods.getMintedCount(address).call((err,result) => {
-      //     console.log("error: "+err);
-      //     if(result != null){
-      //        //setMintedCount(result)
-      //     }
-      // })
-      web3.eth.net.getId().then((result) => {
-        console.log("Network id: " + result);
-        if (result !== 1) {
-          alert("Wrong Network Selected. Select Ethereum Mainnet");
-        }
+      // 1. Create contract instance
+      const contract = getContract({
+        address: contract_address,
+        abi: contract_abi,
+        client,
       });
+
+      console.log(contract, "contract");
+      console.log(client, "client");
+
+      await fetch_data();
+      // const isContract = getContract({
+      //   address: contract_address ,
+      //   abi: contract_abi,
+      // })
+      // console.log(isContract,"isContract")
+      // setContract(isContract);
+    }
+
+    if (isConnected) {
+      if (chain.id === 1) {
+        handleConnection();
+      } else {
+        swal.fire("Wrong Network Selected. Select Ethereum Mainnet");
+      }
+    }
+  }, [isConnected, chain]);
+
+  async function connect_wallet() {
+    try {
+      const result = await open();
+    } catch (error) {
+      console.error("Error connecting to provider:", error);
     }
   }
 
   async function fetch_data() {
-    // const web3 = new Web3(speedy_nodes);
-    // setweb3global(web3);
-    // const contract = new web3.eth.Contract(contract_abi, contract_address);
-    //await Web3.givenProvider.enable()
+    //--------------------------------------------------------------------------------------
+    const gettingEthBalance = async () => {
+      const resultGetBalanceETH = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "getContractBalanceETH",
+      });
+      console.log(resultGetBalanceETH, "getContractBalanceETH");
 
-    contract.methods.getContractEthBalance().call((err, result) => {
-      console.log("error: " + err);
-      //added balance for testing.
-      let balance = 1000000000010;
-      console.log("result", result);
-      if (result != null) {
-        setcontractEthBalance(result);
-        //following balance should be replaced with the result that is received in the function
-        calculate_progress(result);
-      }
-    });
+      const convertedValue = Web3.utils.fromWei(
+        resultGetBalanceETH.toString(),
+        "ether"
+      );
 
-    contract.methods.getContractTokenBalance().call((err, result) => {
-      console.log("error: " + err);
-      if (result != null) {
-        setcontractTokenBalance(result);
-      }
-    });
+      console.log(convertedValue, typeof convertedValue, "convertedValue");
+      setcontractEthBalance(convertedValue);
+    };
+    await gettingEthBalance();
+    //--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getTotalTokenSold = async () => {
+      const resultTotalTokenSold = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "totalTokenSold",
+      });
+      const result = Number(resultTotalTokenSold);
+      setSoldTokens(result);
+      calculate_progress(result);
+      console.log(result, "resultTotalTokenSold");
+    };
+    await getTotalTokenSold();
+    //--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getFLYYBalance = async () => {
+      const resultFLYYBalance = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "getContractBalanceFLYY",
+      });
+      const result = Number(resultFLYYBalance);
+      setcontractTokenBalance(result);
+    };
+    await getFLYYBalance();
+    //--------------------------------------------------------------------------------------
 
-    contract.methods.tokenPriceInWei().call((err, result) => {
-      console.log("error: " + err);
-      if (result != null) {
-        settokenPriceInWei(result);
-      }
-    });
-    // contract.methods.get_token_count().call((err,result) => {
-    //     if(result != null){
-    //         settokenCount(result)
-    //     }
-    // })
+    //--------------------------------------------------------------------------------------
+    const getPriceInWei = async () => {
+      const resultPriceInWei = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "tokenPriceInWEI",
+      });
+      const result = Number(resultPriceInWei);
+      settokenPriceInWei(result);
+    };
+    await getPriceInWei();
+    //--------------------------------------------------------------------------------------
+
+    //--------------------------------------------------------------------------------------
+    const getPriceInUSDT = async () => {
+      const resultPriceInUSDT = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "tokenPriceInUSDT",
+      });
+      console.log(resultPriceInUSDT, "resultPriceInUSDT");
+      const result = Number(resultPriceInUSDT);
+      let tokenPrice = 1 / result;
+      console.log(tokenPrice, "tokenPrice");
+      settokenPriceInUSDT(tokenPrice);
+    };
+    await getPriceInUSDT();
+    //--------------------------------------------------------------------------------------
   }
   const onEthValueInputHandler = (e) => {
     let temp = parseInt(e.target.value - 0.00002);
@@ -231,29 +271,50 @@ function App() {
       }
     }
   }
-  async function buy() {
+
+  //-----------------
+  const buyWithEth = async () => {
+    if (selectedEthValueinWei > 0) {
+      try {
+        const { request } = await publicClient.simulateContract({
+          account: address,
+          address: contract_address,
+          abi: contract_abi,
+          functionName: "buyTokenInETH",
+        });
+        console.log(request, "request");
+        await client.writeContract(request);
+      } catch (e) {
+        show_error_alert(e);
+      }
+    } else {
+      swal.fire("Please select the no of Tokens to buy");
+    }
+  };
+  //-----------------
+  async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
       // const web3 = new Web3(Web3.givenProvider);
       // await Web3.givenProvider.enable();
       // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
-      console.log("Buy function : ", contract, web3Global);
-      const addresses = await web3Global.eth.getAccounts();
-      const address = addresses[0];
-      console.log("addresses[0]: " + addresses[0]);
+      console.log("Buy function : ", contract, web3Global, address);
+      console.log("addresses[0]: " + address);
 
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
       //   price =0.006;
       try {
-        const estemated_Gas = await contract.methods.buyToken().estimateGas({
-          from: address,
-          value: selectedEthValueinWei.toString(),
-          maxPriorityFeePerGas: null,
-          maxFeePerGas: null,
-        });
+        const estemated_Gas = await contract.methods
+          .buyTokenInETH()
+          .estimateGas({
+            from: address,
+            value: selectedEthValueinWei.toString(),
+            maxPriorityFeePerGas: null,
+            maxFeePerGas: null,
+          });
         console.log(estemated_Gas);
-        const result = await contract.methods.buyToken().send({
+        const result = await contract.methods.buyTokenInETH().send({
           from: address,
           value: selectedEthValueinWei.toString(),
           gas: estemated_Gas,
@@ -269,22 +330,79 @@ function App() {
       swal.fire("Please select the no of Tokens to buy");
     }
   }
-  function calculate_progress(contractEthBalance) {
+
+  async function buyWithCard() {
+    if (selectedEthValueinWei > 0) {
+      console.log("Buy function : ", contract, web3Global);
+      const addresses = await web3Global.eth.getAccounts();
+      const address = addresses[0];
+      console.log("addresses[0]: " + addresses[0]);
+
+      // price = Math.round(price * 100) / 100;
+      console.log("Price:  .........   " + selectedEthValueinWei);
+      //   price =0.006;
+      try {
+        const buyUsingCard = await initializationFunction({
+          address,
+          contract,
+        });
+        console.log(buyUsingCard, "buyusingCard");
+      } catch (e) {
+        show_error_alert(e);
+      }
+
+      // await contract.methods.tokenByIndex(i).call();
+    } else {
+      swal.fire("Please select the no of Tokens to buy");
+    }
+  }
+  function calculate_progress(tokensSold) {
     // let in_ether = web3Global.utils.fromWei("100000000000000000000", "ether");
-    let in_ether = contractEthBalance;
-    let in_float = parseFloat(in_ether);
+    // let in_ether = tokensSold;
+    // let in_float = parseFloat(in_ether);
 
-    let total_bought = in_float * 0.00002;
-    total_bought = Math.round(total_bought);
+    console.log(tokensSold, "Sold Tokens");
+    // let total_bought = in_float * 0.00002;
+    let total_sold = Math.round(tokensSold);
 
-    let total_tokens = 75000000;
-    const completed = Math.round(
-      (Math.round(total_bought) / total_tokens) * 100
-    );
-    //let completed = ((total_tokens/ 100) * total_bought).toFixed(2)
-    console.table({ in_float, total_bought, completed });
+    let total_tokens = 62160000;
+    const completed = Math.round((Math.round(total_sold) / total_tokens) * 100);
+    //let completed = ((total_tokens/ 100) * total_sold).toFixed(2)
+    console.table({ total_sold, completed });
     setProgressPercentage(completed + "%");
   }
+
+  //Add token to the Metamask
+  const addTokenToMetamask = async () => {
+    const tokenAddress = "0xdEF36a0653D4992c3614362553C446ce41488a46";
+    const tokenSymbol = "FLYY";
+    const tokenDecimals = 18;
+    const tokenImage = "https://etherscan.io/token/images/flyguyz_32.png";
+
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error can be thrown.
+      const wasAdded = await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20", // Initially only supports ERC-20 tokens, but eventually more!
+          options: {
+            address: tokenAddress, // The address of the token.
+            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 characters.
+            decimals: tokenDecimals, // The number of decimals in the token.
+            image: tokenImage, // A string URL of the token logo.
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log("Thanks for your interest!");
+      } else {
+        console.log("Your loss!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <meta charSet="UTF-8" />
@@ -346,79 +464,31 @@ function App() {
             />
           </a>
 
-          {/* Start of Menu Bar */}
-          {/* <div className="bg-[#391883] z-10"> */}
-          <div className="hidden md:flex col-auto navbar-main ms-auto md:px-2 lg:px-4 py-3 rounded-2xl bg-[#391883] ">
-            <ul className="navbar-nav text-white flex-column flex-md-row ms-auto align-items-center space-x-2 lg:space-x-4">
-              <li className="nav-item ">
-                <a
-                  className="nav-link-top text-base font-bold no-underline"
-                  href="https://www.flyguyz.io/"
-                >
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold no-underline text-base "
-                  href="https://dashboard.flyguyz.io/"
-                >
-                  Token Sale
-                </a>
-              </li>
-              <li className="nav-item hover:text-[#3ce66f] ">
-                <a
-                  className="nav-link-top  text-base font-bold no-underline"
-                  href="https://claim.flyguyz.io/"
-                >
-                  Claim
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://referral.flyguyz.io/"
-                >
-                  Referral
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://fly-guyz.vercel.app/litepaper.html"
-                >
-                  Litepaper
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://whitepaper.flyguyz.io/"
-                >
-                  Whitepaper
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://flyguyz.io#roadmap"
-                >
-                  Roadmap
-                </a>
-              </li>
-            </ul>
-          </div>
-          {/* </div> */}
+          <MenuBar />
           {/* End of Menu bar */}
           <ul className="navbar-nav ms-auto mb-lg-0">
             <li className="nav-item">
-              <a
-                className="btn btn-blue"
-                aria-current="page"
-                onClick={connect_wallet}
-              >
-                {connectBtnText}
-              </a>
+              {(!isConnected || chain.id !== 1) && (
+                <a
+                  className="btn btn-blue"
+                  aria-current="page"
+                  onClick={connect_wallet}
+                >
+                  CONNECT WALLET
+                </a>
+              )}
+              {isConnected && chain.id === 1 && (
+                <div className="space-x-2">
+                  
+                  <a
+                    className="btn btn-blue"
+                    aria-current="page"
+                    onClick={connect_wallet}
+                  >
+                    CONNECTED
+                  </a>
+                </div>
+              )}
             </li>
           </ul>
         </div>
@@ -507,62 +577,7 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-stretch">
           {/* Sidebar Start */}
-          <div id="sideBar" className="sidebar py-4 col-auto">
-            <div className="sidebar-block">
-              <ul className="navbar-nav">
-                <li className="nav-item">
-                  <a href="#" className="nav-link">
-                    <i className="icon">
-                      <img
-                        src="img/icons/tokenization.svg"
-                        alt="Buy Tokens"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Buy Tokens</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a href="https://www.flyguyz.io/" className="nav-link">
-                    <i className="icon">
-                      <img
-                        src="img/icons/home.svg"
-                        alt="Home"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Home</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    href="https://www.flyguyz.io/litepaper.html"
-                    className="nav-link"
-                  >
-                    <i className="icon">
-                      <img
-                        src="img/icons/bird.svg"
-                        alt="Litepaper"
-                        className="img-fluid"
-                      />
-                    </i>
-                    <span>Litepaper</span>
-                  </a>
-                </li>
-                <li className="nav-item">
-                  <a
-                    href="https://www.flyguyz.io/index.html#roadmap"
-                    className="nav-link"
-                  >
-                    <i className="icon">
-                      <img src="img/icons/track.svg" alt="Roadmap" />
-                    </i>
-                    <span>Roadmap</span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+          <Sidebar addTokenToMetamask={addTokenToMetamask} />
           {/* Sidebar   End */}
           {/* Other Page Start */}
           <div className="col pt-4">
@@ -716,14 +731,19 @@ function App() {
                             </small>
                           </div>
                           <div className="flex flex-row justify-between">
-                            <p>Buy Before Price Increases To $0.020 FLYY</p>
+                            <p>Round 1 Claim Date on Sep. 20</p>
+                          </div>
+                          <div className="flex flex-row justify-between">
+                            <p className="-mt-2">
+                              Buy Before Price Increases To $0.020 FLYY
+                            </p>
                           </div>
                           <div className="flex flex-row justify-between">
                             <p className="-mt-2">Listing Price $0.040</p>
                           </div>
                         </div>
-                        <div className="text-end card-footer">
-                          {!isWalletConnected && (
+                        <div id="wert-widget" className="text-end card-footer">
+                          {(!isConnected || chain.id !== 1) && (
                             <button
                               type="button"
                               onClick={connect_wallet}
@@ -732,16 +752,26 @@ function App() {
                               Connect wallet
                             </button>
                           )}
-                          {isWalletConnected && (
-                            <button
-                              type="button"
-                              onClick={buy}
-                              className="btn-buy d-block w-100 text-uppercase btn btn-blue"
-                            >
-                              Buy!
-                            </button>
+                          {isConnected && chain.id === 1 && (
+                            <>
+                              {/* Card using card */}
+                              {/* <button
+                                type="button"
+                                onClick={buyWithCard}
+                                className="btn-buy d-block w-100 text-uppercase btn btn-blue"
+                              >
+                                Buy using Card
+                              </button>
+                              <br /> */}
+                              <button
+                                type="button"
+                                onClick={buyWithEther}
+                                className="btn-buy d-block w-100 text-uppercase btn btn-blue"
+                              >
+                                Buy with Ether
+                              </button>
+                            </>
                           )}
-
                           <div className="text-center mt-3" />
                         </div>
                       </div>
@@ -781,231 +811,14 @@ function App() {
                     </div>
                   </div>
                   {/* end side table */}
-                  <div className="mb-4 fundraising-card col-xl-8 col-lg-12 col-md-12">
-                    <div className="h-100 card">
-                      <div className="py-4 card-header">
-                        <h6 className="card-heading">
-                          Private sale Fundraising
-                        </h6>
-                      </div>
-                      <div className="pt-3 pb-0 card-body">
-                        <div className="h2 mb-3 text-accent text-uppercase">
-                          {progressPercentage}
-                        </div>
-                        <div className="align-items-center mb-3 row">
-                          <div className="fundraising-element mb-3 mb-md-0 text-muted fw-bold text-round col-lg-2 col-md-2">
-                            Completed
-                          </div>
-                          <div className="fundraising-element mb-3 mb-md-0 col-lg-7 col-md-6">
-                            <div className="progress">
-                              <div
-                                role="progressbar"
-                                className="progress-bar bg-green progress-bar-animated progress-bar-striped"
-                                aria-valuenow={0}
-                                aria-valuemin={0}
-                                aria-valuemax={100}
-                                style={{ width: progressPercentage }}
-                              >
-                                {progressPercentage}
-                              </div>
-                            </div>
-                          </div>
-                          <div className="fundraising-element text-muted fw-bold col-lg-3 col-md-4">
-                            <span className="token token-with-ticker">
-                              <img
-                                src="img/icons/flyguyz-icon.png"
-                                alt="FlyGuyz"
-                              />
-                              <span className="token-name">FLYY</span>
-                              <b className="token-value">62,160,000</b>
-                            </span>
-                          </div>
-                        </div>
-                        <hr />
-                        <div className="mb-3 row">
-                          <div className="col-lg-6">
-                            <p>
-                              <b>Round details:</b>
-                            </p>
-                            <ul>
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Token Symbol:{" "}
-                                  </small>
-                                  <a href="#" target="_blank" rel="noreferrer">
-                                    <b>$FLYY</b>
-                                  </a>
-                                </p>
-                              </li>
-                              {/* <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Hard Cap:{" "}
-                                  </small>
-                                  <strong>
-                                    <span>$621,600</span>
-                                  </strong>
-                                </p>
-                              </li> */}
-                              {/* <li>
-                                <p>
-                                  <small class="text-muted">
-                                    Pre-Sale Supply:{" "}
-                                  </small>
-                                  <b>62,160,000 FLYY</b>
-                                </p>
-                              </li> */}
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Max supply:{" "}
-                                  </small>
-                                  <b>888,000,000 FLYY</b>
-                                </p>
-                              </li>
-                            </ul>
-                          </div>
-                          <div className="col-lg-6">
-                            <p className="hidden md:block">
-                              <b className="opacity-0">Round details:</b>
-                            </p>
-                            <ul>
-                              <li>
-                                <p>
-                                  <small className="text-muted">
-                                    Hard Cap:{" "}
-                                  </small>
-                                  <strong>
-                                    <span>$621,600</span>
-                                  </strong>
-                                </p>
-                              </li>
-                              <li>
-                                <p>
-                                  <small class="text-muted">
-                                    Pre-Sale Supply:{" "}
-                                  </small>
-                                  <b>62,160,000 FLYY</b>
-                                </p>
-                              </li>
-                              {/* <li>
-                                <p>
-                                  <small className="text-muted">Price: </small>
-                                  <b>1 FLYY = 0.025$</b>
-                                </p>
-                              </li> */}
-                              {/* <li>
-                                <p>
-                                  <b>1 FLYY = 0.048 BUSD</b>
-                                  <small class="text-muted">
-                                    {" "}
-                                    - Allocation less than $10,000
-                                  </small>
-                                </p>
-                              </li> */}
-                            </ul>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PercentageBar progressPercentage={progressPercentage} />
                 </div>
                 {/* End of sale bar portion */}
               </section>
               {/* Graphs   End */}
             </div>
             {/* Footer Start */}
-            <footer className="footer align-self-end py-3 px-xl-5 w-100">
-              <div className="container-fluid">
-                <div className="row">
-                  <div className="col-md-3">
-                    <div className="copyright justify-content-center justify-content-md-start fw-bold">
-                      <p className="mb-3 mb-md-0">FlyGuyz © 2022</p>
-                    </div>
-                  </div>
-                  <div className="text-center text-md-start fw-bold col-md-6">
-                    <ul className="social-list">
-                      <li>
-                        <a
-                          className="social-list-item social-discord"
-                          href="https://discord.gg/FlyGuyz"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-discord" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-telegram"
-                          href="Https://t.me/flyguyzchat"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-telegram" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-twitter"
-                          href="Https://twitter.com/FlyGuyzOfficial"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-twitter" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-binance"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-binance" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-opensea"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-opensea" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-cmc"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-cmc" />
-                        </a>
-                      </li>
-                      <li>
-                        <a
-                          className="social-list-item social-linktree"
-                          href="#"
-                          target="_blank"
-                          rel="noreferrer"
-                        >
-                          <i className="icon-linktree" />
-                        </a>
-                      </li>
-                    </ul>
-                  </div>
-                  <div className="text-center text-md-end text-gray-400 col-md-3">
-                    <div className="mb-0 version justify-content-center justify-content-md-start mt-3 mt-md-0">
-                      <p>Version 1.0.0</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </footer>
+            <Footer />
             {/* Footer   End */}
           </div>
           {/* Other Page   End */}
