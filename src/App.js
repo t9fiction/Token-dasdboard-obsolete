@@ -15,6 +15,7 @@ import Footer from "./component/Footer";
 import PercentageBar from "./component/PercentageBar";
 import Sidebar from "./component/Sidebar";
 import { initializationFunction } from "./component/wert";
+import MenuBar from "./component/MenuBar";
 
 function App() {
   const { open, close } = useWeb3Modal();
@@ -208,36 +209,6 @@ function App() {
     };
     await getPriceInUSDT();
     //--------------------------------------------------------------------------------------
-    // contract.methods.getContractEthBalance().call((err, result) => {
-    //   console.log("error: " + err);
-    //   //added balance for testing.
-    //   let balance = 1000000000010;
-    //   console.log("result", result);
-    //   if (result != null) {
-    //     setcontractEthBalance(result);
-    //     //following balance should be replaced with the result that is received in the function
-    //     calculate_progress(result);
-    //   }
-    // });
-
-    // contract.methods.getContractTokenBalance().call((err, result) => {
-    //   console.log("error: " + err);
-    //   if (result != null) {
-    //     setcontractTokenBalance(result);
-    //   }
-    // });
-
-    // contract.methods.tokenPriceInWei().call((err, result) => {
-    //   console.log("error: " + err);
-    //   if (result != null) {
-    //     settokenPriceInWei(result);
-    //   }
-    // });
-    // contract.methods.get_token_count().call((err,result) => {
-    //     if(result != null){
-    //         settokenCount(result)
-    //     }
-    // })
   }
   const onEthValueInputHandler = (e) => {
     let temp = parseInt(e.target.value - 0.00002);
@@ -305,10 +276,8 @@ function App() {
       // await Web3.givenProvider.enable();
       // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
-      console.log("Buy function : ", contract, web3Global);
-      const addresses = await web3Global.eth.getAccounts();
-      const address = addresses[0];
-      console.log("addresses[0]: " + addresses[0]);
+      console.log("Buy function : ", contract, web3Global, address);
+      console.log("addresses[0]: " + address);
 
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
@@ -441,69 +410,7 @@ function App() {
             />
           </a>
 
-          {/* Start of Menu Bar */}
-          {/* <div className="bg-[#391883] z-10"> */}
-          <div className="hidden md:flex col-auto navbar-main ms-auto md:px-2 lg:px-4 py-3 rounded-2xl bg-[#391883] ">
-            <ul className="navbar-nav text-white flex-column flex-md-row ms-auto align-items-center space-x-2 lg:space-x-4">
-              <li className="nav-item ">
-                <a
-                  className="nav-link-top text-base font-bold no-underline"
-                  href="https://www.flyguyz.io/"
-                >
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold no-underline text-base "
-                  href="https://dashboard.flyguyz.io/"
-                >
-                  Token Sale
-                </a>
-              </li>
-              <li className="nav-item hover:text-[#3ce66f] ">
-                <a
-                  className="nav-link-top  text-base font-bold no-underline"
-                  href="https://claim.flyguyz.io/"
-                >
-                  Claim
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://referral.flyguyz.io/"
-                >
-                  Referral
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://fly-guyz.vercel.app/litepaper.html"
-                >
-                  Litepaper
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://whitepaper.flyguyz.io/"
-                >
-                  Whitepaper
-                </a>
-              </li>
-              <li className="nav-item">
-                <a
-                  className="nav-link-top font-bold text-base no-underline"
-                  href="https://flyguyz.io#roadmap"
-                >
-                  Roadmap
-                </a>
-              </li>
-            </ul>
-          </div>
-          {/* </div> */}
+          <MenuBar />
           {/* End of Menu bar */}
           <ul className="navbar-nav ms-auto mb-lg-0">
             <li className="nav-item">
