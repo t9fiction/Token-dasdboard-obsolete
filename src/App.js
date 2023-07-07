@@ -371,20 +371,21 @@ await getPriceInUSDT();
       swal.fire("Please select the no of Tokens to buy");
     }
   }
-  function calculate_progress(contractEthBalance) {
+  function calculate_progress(tokensSold) {
     // let in_ether = web3Global.utils.fromWei("100000000000000000000", "ether");
-    let in_ether = contractEthBalance;
-    let in_float = parseFloat(in_ether);
+    // let in_ether = tokensSold;
+    // let in_float = parseFloat(in_ether);
 
-    let total_bought = in_float * 0.00002;
-    total_bought = Math.round(total_bought);
+    console.log(tokensSold, "Sold Tokens")
+    // let total_bought = in_float * 0.00002;
+    let total_sold = Math.round(tokensSold);
 
     let total_tokens = 62160000;
     const completed = Math.round(
-      (Math.round(total_bought) / total_tokens) * 100
+      (Math.round(total_sold) / total_tokens) * 100
     );
-    //let completed = ((total_tokens/ 100) * total_bought).toFixed(2)
-    console.table({ in_float, total_bought, completed });
+    //let completed = ((total_tokens/ 100) * total_sold).toFixed(2)
+    console.table({ total_sold, completed });
     setProgressPercentage(completed + "%");
   }
   return (
