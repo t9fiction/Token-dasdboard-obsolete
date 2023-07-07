@@ -17,14 +17,12 @@ import Sidebar from "./component/Sidebar";
 import { initializationFunction } from "./component/wert";
 
 function App() {
-
   const { open, close } = useWeb3Modal();
   const { address, isConnected } = useAccount();
   const { connectors, error, isLoading, pendingConnector } = useConnect();
   const { chain } = useNetwork();
 
   const [isWalletConnected, setisWalletConnected] = useState(false);
-  const [connectBtnText, setConnectBtnText] = useState("Connect Wallet");
   const [contract, setContract] = useState();
   const [contractEthBalance, setcontractEthBalance] = useState(0);
   const [contractTokenBalance, setcontractTokenBalance] = useState(0);
@@ -83,52 +81,49 @@ function App() {
     func();
   }, []);
 
-  // 
+  //
   useEffect(() => {
     async function handleConnection() {
-      if (chain.id !== 1) {
-        alert("Wrong Network Selected. Select Ethereum Mainnet");
-        setConnectBtnText("Connect Wallet");
-      } else {
-        // const isContract = new web3.eth.Contract(contract_abi, contract_address);
+      // const isContract = new web3.eth.Contract(contract_abi, contract_address);
 
-        // const addresses = await web3.eth.getAccounts();
-        // const address = addresses[0];
-        setConnectBtnText("Connected");
+      // const addresses = await web3.eth.getAccounts();
+      // const address = addresses[0];
 
-        addReferral(address);
-        // setweb3global(web3);
+      addReferral(address);
+      // setweb3global(web3);
 
-        const client = createWalletClient({
-          chain: mainnet,
-          transport: custom(window.ethereum),
-        });
+      const client = createWalletClient({
+        chain: mainnet,
+        transport: custom(window.ethereum),
+      });
 
-        // 1. Create contract instance
-        const contract = getContract({
-          address: contract_address,
-          abi: contract_abi,
-          client,
-        });
+      // 1. Create contract instance
+      const contract = getContract({
+        address: contract_address,
+        abi: contract_abi,
+        client,
+      });
 
-        console.log(contract, "contract");
-        console.log(client, "client");
+      console.log(contract, "contract");
+      console.log(client, "client");
 
-        await fetch_data();
-        // const isContract = getContract({
-        //   address: contract_address ,
-        //   abi: contract_abi,
-        // })
-        // console.log(isContract,"isContract")
-        // setContract(isContract);
-      }
+      await fetch_data();
+      // const isContract = getContract({
+      //   address: contract_address ,
+      //   abi: contract_abi,
+      // })
+      // console.log(isContract,"isContract")
+      // setContract(isContract);
     }
 
     if (isConnected) {
-      handleConnection();
+      if (chain.id === 1) {
+        handleConnection();
+      } else {
+        swal.fire("Wrong Network Selected. Select Ethereum Mainnet");
+      }
     }
   }, [isConnected, chain]);
-
 
   async function connect_wallet() {
     try {
@@ -139,7 +134,6 @@ function App() {
   }
 
   async function fetch_data() {
-    
     //--------------------------------------------------------------------------------------
     const gettingEthBalance = async () => {
       const resultGetBalanceETH = await publicClient.readContract({
@@ -148,72 +142,72 @@ function App() {
         functionName: "getContractBalanceETH",
       });
       console.log(resultGetBalanceETH, "getContractBalanceETH");
-      
+
       const convertedValue = Web3.utils.fromWei(
         resultGetBalanceETH.toString(),
         "ether"
-        );
-        
-        console.log(convertedValue, typeof(convertedValue),"convertedValue");
-        setcontractEthBalance(convertedValue);
+      );
+
+      console.log(convertedValue, typeof convertedValue, "convertedValue");
+      setcontractEthBalance(convertedValue);
     };
     await gettingEthBalance();
     //--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------
-const getTotalTokenSold = async () => {
-  const resultTotalTokenSold = await publicClient.readContract({
-    address: contract_address,
-    abi: contract_abi,
-    functionName: "totalTokenSold",
-  });
-  const result = Number(resultTotalTokenSold);
-  setSoldTokens(result);
-  calculate_progress(result);
-  console.log(result, "resultTotalTokenSold");
-};
-await getTotalTokenSold();
-//--------------------------------------------------------------------------------------
-//--------------------------------------------------------------------------------------
-const getFLYYBalance = async () => {
-  const resultFLYYBalance = await publicClient.readContract({
-    address: contract_address,
-    abi: contract_abi,
-    functionName: "getContractBalanceFLYY",
-  });
-  const result = Number(resultFLYYBalance)
-  setcontractTokenBalance(result);
-};
-await getFLYYBalance();
-//--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getTotalTokenSold = async () => {
+      const resultTotalTokenSold = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "totalTokenSold",
+      });
+      const result = Number(resultTotalTokenSold);
+      setSoldTokens(result);
+      calculate_progress(result);
+      console.log(result, "resultTotalTokenSold");
+    };
+    await getTotalTokenSold();
+    //--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getFLYYBalance = async () => {
+      const resultFLYYBalance = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "getContractBalanceFLYY",
+      });
+      const result = Number(resultFLYYBalance);
+      setcontractTokenBalance(result);
+    };
+    await getFLYYBalance();
+    //--------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------
-const getPriceInWei = async () => {
-  const resultPriceInWei = await publicClient.readContract({
-    address: contract_address,
-    abi: contract_abi,
-    functionName: "tokenPriceInWEI",
-  });
-  const result = Number(resultPriceInWei)
-  settokenPriceInWei(result);
-};
-await getPriceInWei();
-//--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getPriceInWei = async () => {
+      const resultPriceInWei = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "tokenPriceInWEI",
+      });
+      const result = Number(resultPriceInWei);
+      settokenPriceInWei(result);
+    };
+    await getPriceInWei();
+    //--------------------------------------------------------------------------------------
 
-//--------------------------------------------------------------------------------------
-const getPriceInUSDT = async () => {
-  const resultPriceInUSDT = await publicClient.readContract({
-    address: contract_address,
-    abi: contract_abi,
-    functionName: "tokenPriceInUSDT",
-  });
-  console.log(resultPriceInUSDT,"resultPriceInUSDT")
-  const result = Number(resultPriceInUSDT)
-  let tokenPrice = 1 / result;
-  console.log(tokenPrice,"tokenPrice")
-  settokenPriceInUSDT(tokenPrice);
-};
-await getPriceInUSDT();
-//--------------------------------------------------------------------------------------
+    //--------------------------------------------------------------------------------------
+    const getPriceInUSDT = async () => {
+      const resultPriceInUSDT = await publicClient.readContract({
+        address: contract_address,
+        abi: contract_abi,
+        functionName: "tokenPriceInUSDT",
+      });
+      console.log(resultPriceInUSDT, "resultPriceInUSDT");
+      const result = Number(resultPriceInUSDT);
+      let tokenPrice = 1 / result;
+      console.log(tokenPrice, "tokenPrice");
+      settokenPriceInUSDT(tokenPrice);
+    };
+    await getPriceInUSDT();
+    //--------------------------------------------------------------------------------------
     // contract.methods.getContractEthBalance().call((err, result) => {
     //   console.log("error: " + err);
     //   //added balance for testing.
@@ -376,14 +370,12 @@ await getPriceInUSDT();
     // let in_ether = tokensSold;
     // let in_float = parseFloat(in_ether);
 
-    console.log(tokensSold, "Sold Tokens")
+    console.log(tokensSold, "Sold Tokens");
     // let total_bought = in_float * 0.00002;
     let total_sold = Math.round(tokensSold);
 
     let total_tokens = 62160000;
-    const completed = Math.round(
-      (Math.round(total_sold) / total_tokens) * 100
-    );
+    const completed = Math.round((Math.round(total_sold) / total_tokens) * 100);
     //let completed = ((total_tokens/ 100) * total_sold).toFixed(2)
     console.table({ total_sold, completed });
     setProgressPercentage(completed + "%");
@@ -515,7 +507,7 @@ await getPriceInUSDT();
           {/* End of Menu bar */}
           <ul className="navbar-nav ms-auto mb-lg-0">
             <li className="nav-item">
-            {(!isConnected || chain.id !== 1) && (
+              {(!isConnected || chain.id !== 1) && (
                 <a
                   className="btn btn-blue"
                   aria-current="page"
@@ -782,7 +774,7 @@ await getPriceInUSDT();
                           </div>
                         </div>
                         <div id="wert-widget" className="text-end card-footer">
-                          {(!isConnected || chain.id !== 5) && (
+                          {(!isConnected || chain.id !== 1) && (
                             <button
                               type="button"
                               onClick={connect_wallet}
@@ -791,7 +783,7 @@ await getPriceInUSDT();
                               Connect wallet
                             </button>
                           )}
-                          {isConnected && chain.id === 5 && (
+                          {isConnected && chain.id === 1 && (
                             <>
                               {/* Card using card */}
                               {/* <button
