@@ -1,6 +1,6 @@
 import React from 'react'
 
-const Sidebar = () => {
+const Sidebar = ({addTokenToMetamask}) => {
   return (
     <div id="sideBar" className="sidebar py-4 col-auto">
             <div className="sidebar-block">
@@ -53,6 +53,17 @@ const Sidebar = () => {
                       <img src="img/icons/track.svg" alt="Roadmap" />
                     </i>
                     <span>Roadmap</span>
+                  </a>
+                </li>
+                <li className="nav-item">
+                  <a
+                    onClick={addTokenToMetamask}
+                    className="nav-link"
+                  >
+                    <i className="icon">
+                      <img src="/img/addToMetamask.png" alt="Add to Metamask" />
+                    </i>
+                    <span>Add to Metamask</span>
                   </a>
                 </li>
               </ul>

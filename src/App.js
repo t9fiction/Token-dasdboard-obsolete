@@ -17,6 +17,7 @@ import Sidebar from "./component/Sidebar";
 import { initializationFunction } from "./component/wert";
 import MenuBar from "./component/MenuBar";
 
+
 function App() {
   const { open, close } = useWeb3Modal();
   const { address, isConnected } = useAccount();
@@ -48,6 +49,7 @@ function App() {
     setContract(isContract);
     setweb3global(web3);
     setselectedEthValueinWei(0);
+    console.log(window.ethereum, "window.ethereum");
   };
 
   //Public Client for reading contract
@@ -280,7 +282,7 @@ function App() {
           abi: contract_abi,
           functionName: "buyTokenInETH",
         });
-        console.log(request,"request")
+        console.log(request, "request");
         await client.writeContract(request);
       } catch (e) {
         show_error_alert(e);
@@ -369,6 +371,38 @@ function App() {
     console.table({ total_sold, completed });
     setProgressPercentage(completed + "%");
   }
+
+  //Add token to the Metamask
+  const addTokenToMetamask = async () => {
+    const tokenAddress = "0xdEF36a0653D4992c3614362553C446ce41488a46";
+    const tokenSymbol = "FLYY";
+    const tokenDecimals = 18;
+    const tokenImage = "https://etherscan.io/token/images/flyguyz_32.png";
+
+    try {
+      // wasAdded is a boolean. Like any RPC method, an error can be thrown.
+      const wasAdded = await window.ethereum.request({
+        method: "wallet_watchAsset",
+        params: {
+          type: "ERC20", // Initially only supports ERC-20 tokens, but eventually more!
+          options: {
+            address: tokenAddress, // The address of the token.
+            symbol: tokenSymbol, // A ticker symbol or shorthand, up to 5 characters.
+            decimals: tokenDecimals, // The number of decimals in the token.
+            image: tokenImage, // A string URL of the token logo.
+          },
+        },
+      });
+
+      if (wasAdded) {
+        console.log("Thanks for your interest!");
+      } else {
+        console.log("Your loss!");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <div>
       <meta charSet="UTF-8" />
@@ -444,13 +478,16 @@ function App() {
                 </a>
               )}
               {isConnected && chain.id === 1 && (
-                <a
-                  className="btn btn-blue"
-                  aria-current="page"
-                  onClick={connect_wallet}
-                >
-                  CONNECTED
-                </a>
+                <div className="space-x-2">
+                  
+                  <a
+                    className="btn btn-blue"
+                    aria-current="page"
+                    onClick={connect_wallet}
+                  >
+                    CONNECTED
+                  </a>
+                </div>
               )}
             </li>
           </ul>
@@ -540,7 +577,7 @@ function App() {
       <div className="container-fluid">
         <div className="row align-items-stretch">
           {/* Sidebar Start */}
-          <Sidebar />
+          <Sidebar addTokenToMetamask={addTokenToMetamask} />
           {/* Sidebar   End */}
           {/* Other Page Start */}
           <div className="col pt-4">
@@ -694,7 +731,12 @@ function App() {
                             </small>
                           </div>
                           <div className="flex flex-row justify-between">
-                            <p>Buy Before Price Increases To $0.020 FLYY</p>
+                            <p>Round 1 Claim Date on Sep. 20</p>
+                          </div>
+                          <div className="flex flex-row justify-between">
+                            <p className="-mt-2">
+                              Buy Before Price Increases To $0.020 FLYY
+                            </p>
                           </div>
                           <div className="flex flex-row justify-between">
                             <p className="-mt-2">Listing Price $0.040</p>
