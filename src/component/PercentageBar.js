@@ -54,7 +54,7 @@ const PercentageBar = ({progressPercentage}) => {
                                   <small className="text-muted">
                                     Token Symbol:{" "}
                                   </small>
-                                  <a href="#" target="_blank" rel="noreferrer">
+                                  <a href="https://etherscan.io/address/0xdef36a0653d4992c3614362553c446ce41488a46#code" target="_blank" rel="noreferrer">
                                     <b>$FLYY</b>
                                   </a>
                                 </p>

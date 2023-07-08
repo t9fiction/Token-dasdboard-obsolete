@@ -57,6 +57,8 @@ function App() {
     chain: mainnet,
     transport: http(),
   });
+
+  //WalletClient for write function of contract
   const client = createWalletClient({
     chain: mainnet,
     transport: custom(window.ethereum),
@@ -273,37 +275,35 @@ function App() {
   }
 
   //-----------------
-  const buyWithEth = async () => {
-    if (selectedEthValueinWei > 0) {
-      try {
-        const { request } = await publicClient.simulateContract({
-          account: address,
-          address: contract_address,
-          abi: contract_abi,
-          functionName: "buyTokenInETH",
-        });
-        console.log(request, "request");
-        await client.writeContract(request);
-      } catch (e) {
-        show_error_alert(e);
-      }
-    } else {
-      swal.fire("Please select the no of Tokens to buy");
-    }
-  };
+  // const buyWithEther = async () => {
+  //   if (selectedEthValueinWei > 0) {
+  //     console.log(selectedEthValueinWei)
+  //     try {
+  //       const { request } = await publicClient.simulateContract({
+  //         address: contract_address,
+  //         abi: contract_abi,
+  //         functionName: "buyTokenInETH",
+  //         args: {
+  //           sender: address,
+  //           amount: selectedEthValueinWei,
+  //         },
+  //       });
+  //       console.log(request, "request");
+  //       await client.writeContract(request);
+  //     } catch (e) {
+  //       show_error_alert(e);
+  //     }
+  //   } else {
+  //     swal.fire("Please select the no of Tokens to buy");
+  //   }
+  // };
   //-----------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
-      // const web3 = new Web3(Web3.givenProvider);
-      // await Web3.givenProvider.enable();
-      // const contract = new web3.eth.Contract(contract_abi, contract_address);
 
       console.log("Buy function : ", contract, web3Global, address);
-      console.log("addresses[0]: " + address);
 
       // price = Math.round(price * 100) / 100;
-      console.log("Price:  .........   " + selectedEthValueinWei);
-      //   price =0.006;
       try {
         const estemated_Gas = await contract.methods
           .buyTokenInETH()
@@ -331,12 +331,12 @@ function App() {
     }
   }
 
+  //-----------------
+
   async function buyWithCard() {
     if (selectedEthValueinWei > 0) {
-      console.log("Buy function : ", contract, web3Global);
-      const addresses = await web3Global.eth.getAccounts();
-      const address = addresses[0];
-      console.log("addresses[0]: " + addresses[0]);
+      
+      console.log("contract and address ",contract,address);
 
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
@@ -731,7 +731,7 @@ function App() {
                             </small>
                           </div>
                           <div className="flex flex-row justify-between">
-                            <p>Round 1 Claim Date on Sep. 20</p>
+                            <p className="font-bold">Round 1 Claim Date on Sep. 20</p>
                           </div>
                           <div className="flex flex-row justify-between">
                             <p className="-mt-2">
