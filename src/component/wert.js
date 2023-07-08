@@ -8,11 +8,9 @@ import { contract_abi, contract_address } from "../config";
 
 window.Buffer = Buffer; // needed to use `signSmartContractData` in browser
 
-const provider = new ethers.providers.Web3Provider(window.ethereum);
-const signer = provider.getSigner();
 const sc_interface = new ethers.utils.Interface(contract_abi);
 
-export const initializationFunction = ({ address, contract }) => {
+export const initializationFunction = ({ address }) => {
   console.log("inside initializationFunction");
   if (window.ethereum) {
     // const web3 = new Web3(window.ethereum);
