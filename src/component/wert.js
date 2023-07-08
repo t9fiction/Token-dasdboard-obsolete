@@ -15,7 +15,7 @@ export const initializationFunction = ({ address }) => {
   if (window.ethereum) {
     // const web3 = new Web3(window.ethereum);
     (async () => {
-      const sc_input_data = sc_interface.encodeFunctionData("buyTokenInUSDT");
+      const sc_input_data = sc_interface.encodeFunctionData("buyTokenInETH");
       // const sc_input_data = web3.eth.abi.encodeFunctionCall({
       //   inputs: [],
       //   name: "buyTokenInUSDT",
