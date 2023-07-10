@@ -58,11 +58,11 @@ function App() {
     transport: http(),
   });
 
-  //WalletClient for write function of contract
-  const client = createWalletClient({
-    chain: mainnet,
-    transport: custom(window.ethereum),
-  });
+  // //WalletClient for write function of contract
+  // const client = createWalletClient({
+  //   chain: mainnet,
+  //   transport: custom(window.ethereum),
+  // });
 
   const onClickNav = () => {
     setNav(!nav);
@@ -102,14 +102,14 @@ function App() {
       // setweb3global(web3);
 
       // 1. Create contract instance
-      const contract = getContract({
-        address: contract_address,
-        abi: contract_abi,
-        client,
-      });
+      // const contract = getContract({
+      //   address: contract_address,
+      //   abi: contract_abi,
+      //   client,
+      // });
 
-      console.log(contract, "contract");
-      console.log(client, "client");
+      // console.log(contract, "contract");
+      // console.log(client, "client");
 
       await fetch_data();
       // const isContract = getContract({
