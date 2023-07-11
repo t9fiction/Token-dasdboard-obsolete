@@ -13,7 +13,7 @@ import { configureChains, createConfig, WagmiConfig } from "wagmi";
 import { mainnet } from "wagmi/chains";
 
 const chains = [mainnet];
-const projectId = "45112d7aed16ba0a9edac1a2312c5961";
+const projectId = "791b4b317d709c1b66d158a73c1c80c3";
 
 const { publicClient, webSocketPublicClient } = configureChains(
   chains,
