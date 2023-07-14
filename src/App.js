@@ -112,26 +112,10 @@ function App() {
       // const addresses = await web3.eth.getAccounts();
       // const address = addresses[0];
 
-      // addReferral(address);
+      addReferral(address);
       // setweb3global(web3);
 
-      // 1. Create contract instance
-      // const contract = getContract({
-      //   address: contract_address,
-      //   abi: contract_abi,
-      //   client,
-      // });
-
-      // console.log(contract, "contract");
-      // console.log(client, "client");
-
       await fetch_data();
-      // const isContract = getContract({
-      //   address: contract_address ,
-      //   abi: contract_abi,
-      // })
-      // console.log(isContract,"isContract")
-      // setContract(isContract);
     }
 
     if (isConnected) {
