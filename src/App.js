@@ -6,10 +6,23 @@ import { contract_address, contract_abi, speedy_nodes } from "./config";
 import { IoMdClose } from "react-icons/io";
 import Web3Provider from "@walletconnect/web3-provider";
 import { useWeb3Modal, Web3Modal } from "@web3modal/react";
-import { mainnet, useAccount, useConnect, useNetwork } from "wagmi";
+import {
+  mainnet,
+  useAccount,
+  useConnect,
+  useNetwork,
+  useContractWrite,
+  usePrepareContractWrite,
+} from "wagmi";
 import { useContractInfiniteReads } from "wagmi";
-import { getContract, parseEther } from "viem";
-import { createWalletClient, custom, createPublicClient, http } from "viem";
+import { getContract, parseEther, simulateContract } from "viem";
+import {
+  createWalletClient,
+  custom,
+  publicActions,
+  createPublicClient,
+  http,
+} from "viem";
 import { goerli } from "viem/chains";
 import Footer from "./component/Footer";
 import PercentageBar from "./component/PercentageBar";
@@ -17,11 +30,10 @@ import Sidebar from "./component/Sidebar";
 import { initializationFunction } from "./component/wert";
 import MenuBar from "./component/MenuBar";
 
-
 function App() {
   const { open, close } = useWeb3Modal();
   const { address, isConnected } = useAccount();
-  const { connectors, error, isLoading, pendingConnector } = useConnect();
+  // const { connectors, error, pendingConnector } = useConnect();
   const { chain } = useNetwork();
 
   const [isWalletConnected, setisWalletConnected] = useState(false);
@@ -31,13 +43,14 @@ function App() {
   const [tokenPriceInWei, settokenPriceInWei] = useState(0);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [selectedEthValue, setselectedEthValue] = useState(0.00002);
-  const [selectedEthValueinWei, setselectedEthValueinWei] = useState();
+  const [selectedEthValueinWei, setselectedEthValueinWei] = useState(0);
   const [tokensToGet, settokensToGet] = useState(0);
   const [web3Global, setweb3global] = useState();
   const [isModal, setIsModal] = useState(false);
   const [nav, setNav] = useState(false);
   const [soldTokens, setSoldTokens] = useState(0);
   const [tokenPriceInUSDT, settokenPriceInUSDT] = useState(0);
+  const [valueinString, setValueInString] = useState('');
 
   const referralCode = window.location.pathname.split("/")[1];
   // console.log(referralCode);
@@ -58,11 +71,12 @@ function App() {
     transport: http(),
   });
 
-  // //WalletClient for write function of contract
-  // const client = createWalletClient({
-  //   chain: mainnet,
-  //   transport: custom(window.ethereum),
-  // });
+  ///WalletClient for writing functions
+  // const walletClient = createWalletClient({
+  //   chain: goerli,
+  //   transport: http(),
+  //   account: address,
+  // }).extend(publicActions);
 
   const onClickNav = () => {
     setNav(!nav);
@@ -101,23 +115,7 @@ function App() {
       addReferral(address);
       // setweb3global(web3);
 
-      // 1. Create contract instance
-      // const contract = getContract({
-      //   address: contract_address,
-      //   abi: contract_abi,
-      //   client,
-      // });
-
-      // console.log(contract, "contract");
-      // console.log(client, "client");
-
       await fetch_data();
-      // const isContract = getContract({
-      //   address: contract_address ,
-      //   abi: contract_abi,
-      // })
-      // console.log(isContract,"isContract")
-      // setContract(isContract);
     }
 
     if (isConnected) {
@@ -136,6 +134,29 @@ function App() {
       console.error("Error connecting to provider:", error);
     }
   }
+
+  //write function for contract
+  // const { config } = usePrepareContractWrite({
+  //   address: contract_address,
+  //   abi: contract_abi,
+  //   functionName: "buyTokenInETH",
+  // });
+  const getTest = async () => {
+
+    const result = await publicClient.simulateContract({
+      address: contract_address,
+      abi: contract_abi,
+      functionName: "buyTokenInETH",
+      value:parseEther(valueinString)
+    });
+    console.log(result,"result")
+  }
+  const { write } = useContractWrite({
+    address: contract_address,
+    abi: contract_abi,
+    functionName: "buyTokenInETH",
+    value: parseEther(valueinString),
+  });
 
   async function fetch_data() {
     //--------------------------------------------------------------------------------------
@@ -218,12 +239,16 @@ function App() {
     temp = temp + 1;
     temp = temp * parseInt(tokenPriceInWei);
     let value_in_ether = web3Global.utils.fromWei(temp.toString(), "ether");
+    let isValueinString = (temp/10**18).toString()
 
+    console.log(isValueinString,"Value in String")
     if (parseFloat(value_in_ether) <= 0.00002) {
       return;
     }
     console.log(value_in_ether);
     setselectedEthValueinWei(temp);
+
+    setValueInString(isValueinString)
     setselectedEthValue(parseFloat(value_in_ether));
     settokensToGet(parseFloat(value_in_ether) / 0.00002);
     //setMintValue(+e.target.value);
@@ -300,27 +325,29 @@ function App() {
   //-----------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
-
       console.log("Buy function : ", contract, web3Global, address);
 
       // price = Math.round(price * 100) / 100;
       try {
-        const estemated_Gas = await contract.methods
-          .buyTokenInETH()
-          .estimateGas({
-            from: address,
-            value: selectedEthValueinWei.toString(),
-            maxPriorityFeePerGas: null,
-            maxFeePerGas: null,
-          });
-        console.log(estemated_Gas);
-        const result = await contract.methods.buyTokenInETH().send({
-          from: address,
-          value: selectedEthValueinWei.toString(),
-          gas: estemated_Gas,
-          maxPriorityFeePerGas: null,
-          maxFeePerGas: null,
-        });
+        await getTest()
+        await write()
+        // await getTest()
+        // const estemated_Gas = await contract.methods
+        //   .buyTokenInETH()
+        //   .estimateGas({
+        //     from: address,
+        //     value: selectedEthValueinWei.toString(),
+        //     maxPriorityFeePerGas: null,
+        //     maxFeePerGas: null,
+        //   });
+        // console.log(estemated_Gas);
+        // const result = await contract.methods.buyTokenInETH().send({
+        //   from: address,
+        //   value: selectedEthValueinWei.toString(),
+        //   gas: estemated_Gas,
+        //   maxPriorityFeePerGas: null,
+        //   maxFeePerGas: null,
+        // });
       } catch (e) {
         show_error_alert(e);
       }
@@ -335,8 +362,7 @@ function App() {
 
   async function buyWithCard() {
     if (selectedEthValueinWei > 0) {
-      
-      console.log("contract and address ",contract,address);
+      console.log("contract and address ", contract, address);
 
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
@@ -479,7 +505,6 @@ function App() {
               )}
               {isConnected && chain.id === 1 && (
                 <div className="space-x-2">
-                  
                   <a
                     className="btn btn-blue"
                     aria-current="page"
@@ -731,7 +756,9 @@ function App() {
                             </small>
                           </div>
                           <div className="flex flex-row justify-between">
-                            <p className="font-bold">Round 1 Claim Date on Sep. 20</p>
+                            <p className="font-bold">
+                              Round 1 Claim Date on Sep. 20
+                            </p>
                           </div>
                           <div className="flex flex-row justify-between">
                             <p className="-mt-2">
