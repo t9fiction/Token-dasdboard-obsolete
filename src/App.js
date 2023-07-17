@@ -14,16 +14,14 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import { useContractInfiniteReads } from "wagmi";
-import { getContract, parseEther, simulateContract } from "viem";
+import { getContract, parseEther, simulateContract, createPublicClient,
+  http, } from "viem";
 import {
   createWalletClient,
   custom,
   publicActions,
-  createPublicClient,
-  http,
+  
 } from "viem";
-import { goerli } from "viem/chains";
 import Footer from "./component/Footer";
 import PercentageBar from "./component/PercentageBar";
 import Sidebar from "./component/Sidebar";
@@ -51,6 +49,7 @@ function App() {
   const [soldTokens, setSoldTokens] = useState(0);
   const [tokenPriceInUSDT, settokenPriceInUSDT] = useState(0);
   const [valueinString, setValueInString] = useState('');
+  const [wertOpen, setWertOpen] = useState(false);
 
   const referralCode = window.location.pathname.split("/")[1];
   // console.log(referralCode);
@@ -185,7 +184,12 @@ function App() {
         abi: contract_abi,
         functionName: "totalTokenSold",
       });
-      const result = Number(resultTotalTokenSold);
+      const result = Web3.utils.fromWei(
+        resultTotalTokenSold.toString(),
+        "ether"
+      );
+      console.log(result, "result");
+      // const result = Number(resultTotalTokenSold);
       setSoldTokens(result);
       calculate_progress(result);
       console.log(result, "resultTotalTokenSold");
@@ -299,30 +303,7 @@ function App() {
     }
   }
 
-  //-----------------
-  // const buyWithEther = async () => {
-  //   if (selectedEthValueinWei > 0) {
-  //     console.log(selectedEthValueinWei)
-  //     try {
-  //       const { request } = await publicClient.simulateContract({
-  //         address: contract_address,
-  //         abi: contract_abi,
-  //         functionName: "buyTokenInETH",
-  //         args: {
-  //           sender: address,
-  //           amount: selectedEthValueinWei,
-  //         },
-  //       });
-  //       console.log(request, "request");
-  //       await client.writeContract(request);
-  //     } catch (e) {
-  //       show_error_alert(e);
-  //     }
-  //   } else {
-  //     swal.fire("Please select the no of Tokens to buy");
-  //   }
-  // };
-  //-----------------
+  //-----------------------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
       console.log("Buy function : ", contract, web3Global, address);
@@ -367,6 +348,7 @@ function App() {
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
       //   price =0.006;
+      setWertOpen(true);
       try {
         const buyUsingCard = await initializationFunction({
           address,
@@ -383,19 +365,14 @@ function App() {
     }
   }
   function calculate_progress(tokensSold) {
-    // let in_ether = web3Global.utils.fromWei("100000000000000000000", "ether");
-    // let in_ether = tokensSold;
-    // let in_float = parseFloat(in_ether);
-
     console.log(tokensSold, "Sold Tokens");
     // let total_bought = in_float * 0.00002;
     let total_sold = Math.round(tokensSold);
-
+    console.log(total_sold, "totalSold");
     let total_tokens = 62160000;
-    const completed = Math.round((Math.round(total_sold) / total_tokens) * 100);
-    //let completed = ((total_tokens/ 100) * total_sold).toFixed(2)
+    const completed = (total_sold / total_tokens) * 100;
     console.table({ total_sold, completed });
-    setProgressPercentage(completed + "%");
+    setProgressPercentage(completed.toFixed(2) + "%");
   }
 
   //Add token to the Metamask
@@ -648,7 +625,9 @@ function App() {
                 <div className="row">
                   <div className="my-4 col-xxl-8 col-xl-8 col-lg-12 col-md-12">
                     <div className="card h-100">
-                      <div className="card-inner after-content">
+                      <div id="wert-widget" className={`card-inner after-content ${
+                          wertOpen ? "w-full h-[800px] relative" : ""
+                        }`}>
                         <div className="py-4 card-header">
                           <h6 className="card-heading">Buy Tokens</h6>
                         </div>
@@ -769,7 +748,7 @@ function App() {
                             <p className="-mt-2">Listing Price $0.040</p>
                           </div>
                         </div>
-                        <div id="wert-widget" className="text-end card-footer">
+                        <div className="text-end card-footer">
                           {(!isConnected || chain.id !== 1) && (
                             <button
                               type="button"
@@ -782,14 +761,14 @@ function App() {
                           {isConnected && chain.id === 1 && (
                             <>
                               {/* Card using card */}
-                              {/* <button
+                              <button
                                 type="button"
                                 onClick={buyWithCard}
                                 className="btn-buy d-block w-100 text-uppercase btn btn-blue"
                               >
                                 Buy using Card
                               </button>
-                              <br /> */}
+                              <br />
                               <button
                                 type="button"
                                 onClick={buyWithEther}
