@@ -264,6 +264,7 @@ function App() {
     //setMintValue(+e.target.value);
   };
   async function show_error_alert(error) {
+    console.log(error,"error")
     let temp_error = error.message.toString();
     console.log(temp_error);
     let error_list = [
@@ -348,14 +349,15 @@ function App() {
       // price = Math.round(price * 100) / 100;
       console.log("Price:  .........   " + selectedEthValueinWei);
       //   price =0.006;
-      setWertOpen(true);
       try {
+        setWertOpen(true);
         const buyUsingCard = await initializationFunction({
           address,
           contract,
         });
         console.log(buyUsingCard, "buyusingCard");
       } catch (e) {
+        setWertOpen(false);
         show_error_alert(e);
       }
 
