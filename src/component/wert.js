@@ -15,7 +15,8 @@ export const initializationFunction = ({ account, valueinString }) => {
       "TokenCrowdsaleFLYY: buyable token amount exceeds crowdsale contract balance"
     );
   } else {
-    let value = valueinString.toString()(
+    let value = valueinString.toString();
+    (
       // if (window.ethereum) {
       // const web3 = new Web3(window.ethereum);
       async () => {
