@@ -14,14 +14,17 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import { getContract, parseEther, simulateContract, createPublicClient,
-  http, } from "viem";
 import {
-  createWalletClient,
-  custom,
-  publicActions,
-  
+  getContract,
+  parseEther,
+  simulateContract,
+  createPublicClient,
+  http,
+  BaseError,
+  InsufficientFundsError,
+  UserRejectedRequestError,
 } from "viem";
+import { createWalletClient, custom, publicActions } from "viem";
 import Footer from "./component/Footer";
 import PercentageBar from "./component/PercentageBar";
 import Sidebar from "./component/Sidebar";
@@ -48,7 +51,7 @@ function App() {
   const [nav, setNav] = useState(false);
   const [soldTokens, setSoldTokens] = useState(0);
   const [tokenPriceInUSDT, settokenPriceInUSDT] = useState(0);
-  const [valueinString, setValueInString] = useState('');
+  const [valueinString, setValueInString] = useState("");
   const [wertOpen, setWertOpen] = useState(false);
 
   const referralCode = window.location.pathname.split("/")[1];
@@ -141,16 +144,15 @@ function App() {
   //   functionName: "buyTokenInETH",
   // });
   const getTest = async () => {
-
     const result = await publicClient.simulateContract({
       address: contract_address,
       abi: contract_abi,
       functionName: "buyTokenInETH",
-      value:parseEther(valueinString)
+      value: parseEther(valueinString),
     });
-    console.log(result,"result")
-  }
-  const { write } = useContractWrite({
+    console.log(result, "result");
+  };
+  const { writeAsync } = useContractWrite({
     address: contract_address,
     abi: contract_abi,
     functionName: "buyTokenInETH",
@@ -243,16 +245,16 @@ function App() {
     temp = temp + 1;
     temp = temp * parseInt(tokenPriceInWei);
     let value_in_ether = web3Global.utils.fromWei(temp.toString(), "ether");
-    let isValueinString = (temp/10**18).toString()
+    let isValueinString = (temp / 10 ** 18).toString();
 
-    console.log(isValueinString,"Value in String")
+    console.log(isValueinString, "Value in String");
     if (parseFloat(value_in_ether) <= 0.00002) {
       return;
     }
     console.log(value_in_ether);
     setselectedEthValueinWei(temp);
 
-    setValueInString(isValueinString)
+    setValueInString(isValueinString);
     setselectedEthValue(parseFloat(value_in_ether));
     settokensToGet(parseFloat(value_in_ether) / 0.00002);
     //setMintValue(+e.target.value);
@@ -264,7 +266,7 @@ function App() {
     //setMintValue(+e.target.value);
   };
   async function show_error_alert(error) {
-    console.log(error,"error")
+    console.log(error, "error");
     let temp_error = error.message.toString();
     console.log(temp_error);
     let error_list = [
@@ -307,34 +309,29 @@ function App() {
   //-----------------------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
-      console.log("Buy function : ", contract, web3Global, address);
-
-      // price = Math.round(price * 100) / 100;
       try {
-        await getTest()
-        await write()
-        // await getTest()
-        // const estemated_Gas = await contract.methods
-        //   .buyTokenInETH()
-        //   .estimateGas({
-        //     from: address,
-        //     value: selectedEthValueinWei.toString(),
-        //     maxPriorityFeePerGas: null,
-        //     maxFeePerGas: null,
-        //   });
-        // console.log(estemated_Gas);
-        // const result = await contract.methods.buyTokenInETH().send({
-        //   from: address,
-        //   value: selectedEthValueinWei.toString(),
-        //   gas: estemated_Gas,
-        //   maxPriorityFeePerGas: null,
-        //   maxFeePerGas: null,
-        // });
-      } catch (e) {
-        show_error_alert(e);
-      }
+        const { result } = await getTest();
+        const writeResult = await writeAsync();
+      } catch (err) {
+        if (err instanceof BaseError) {
+          const isInsufficientFundsError =
+            err.walk((e) => e instanceof InsufficientFundsError) instanceof
+            InsufficientFundsError;
+          //   const isUserRejectedRequestError =
+          //     err.walk((e) => e instanceof UserRejectedRequestError) instanceof
+          //     UserRejectedRequestError;
 
-      // await contract.methods.tokenByIndex(i).call();
+          //   // const revertError = err.walk(
+          //   //   (err) => err instanceof ContractFunctionExecutionError
+          //   // );
+          if (isInsufficientFundsError) {
+            swal.fire("Not enough balance");
+          }
+          //   if (isUserRejectedRequestError) {
+          //     alert(isInsufficientFundsError,"isUserRejecte");
+          //   }
+        }
+      }
     } else {
       swal.fire("Please select the no of Tokens to buy");
     }
@@ -627,9 +624,12 @@ function App() {
                 <div className="row">
                   <div className="my-4 col-xxl-8 col-xl-8 col-lg-12 col-md-12">
                     <div className="card h-100">
-                      <div id="wert-widget" className={`card-inner after-content ${
+                      <div
+                        id="wert-widget"
+                        className={`card-inner after-content ${
                           wertOpen ? "w-full h-[800px] relative" : ""
-                        }`}>
+                        }`}
+                      >
                         <div className="py-4 card-header">
                           <h6 className="card-heading">Buy Tokens</h6>
                         </div>
