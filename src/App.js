@@ -14,16 +14,17 @@ import {
   useContractWrite,
   usePrepareContractWrite,
 } from "wagmi";
-import { useContractInfiniteReads } from "wagmi";
-import { getContract, parseEther, simulateContract } from "viem";
 import {
-  createWalletClient,
-  custom,
-  publicActions,
+  getContract,
+  parseEther,
+  simulateContract,
   createPublicClient,
   http,
+  BaseError,
+  InsufficientFundsError,
+  UserRejectedRequestError,
 } from "viem";
-import { goerli } from "viem/chains";
+import { createWalletClient, custom, publicActions } from "viem";
 import Footer from "./component/Footer";
 import PercentageBar from "./component/PercentageBar";
 import Sidebar from "./component/Sidebar";
@@ -50,7 +51,8 @@ function App() {
   const [nav, setNav] = useState(false);
   const [soldTokens, setSoldTokens] = useState(0);
   const [tokenPriceInUSDT, settokenPriceInUSDT] = useState(0);
-  const [valueinString, setValueInString] = useState('');
+  const [valueinString, setValueInString] = useState("");
+  const [wertOpen, setWertOpen] = useState(false);
 
   const referralCode = window.location.pathname.split("/")[1];
   // console.log(referralCode);
@@ -142,16 +144,15 @@ function App() {
   //   functionName: "buyTokenInETH",
   // });
   const getTest = async () => {
-
     const result = await publicClient.simulateContract({
       address: contract_address,
       abi: contract_abi,
       functionName: "buyTokenInETH",
-      value:parseEther(valueinString)
+      value: parseEther(valueinString),
     });
-    console.log(result,"result")
-  }
-  const { write } = useContractWrite({
+    console.log(result, "result");
+  };
+  const { writeAsync } = useContractWrite({
     address: contract_address,
     abi: contract_abi,
     functionName: "buyTokenInETH",
@@ -185,7 +186,12 @@ function App() {
         abi: contract_abi,
         functionName: "totalTokenSold",
       });
-      const result = Number(resultTotalTokenSold);
+      const result = Web3.utils.fromWei(
+        resultTotalTokenSold.toString(),
+        "ether"
+      );
+      console.log(result, "result");
+      // const result = Number(resultTotalTokenSold);
       setSoldTokens(result);
       calculate_progress(result);
       console.log(result, "resultTotalTokenSold");
@@ -239,16 +245,16 @@ function App() {
     temp = temp + 1;
     temp = temp * parseInt(tokenPriceInWei);
     let value_in_ether = web3Global.utils.fromWei(temp.toString(), "ether");
-    let isValueinString = (temp/10**18).toString()
+    let isValueinString = (temp / 10 ** 18).toString();
 
-    console.log(isValueinString,"Value in String")
+    console.log(isValueinString, "Value in String");
     if (parseFloat(value_in_ether) <= 0.00002) {
       return;
     }
     console.log(value_in_ether);
     setselectedEthValueinWei(temp);
 
-    setValueInString(isValueinString)
+    setValueInString(isValueinString);
     setselectedEthValue(parseFloat(value_in_ether));
     settokensToGet(parseFloat(value_in_ether) / 0.00002);
     //setMintValue(+e.target.value);
@@ -260,6 +266,7 @@ function App() {
     //setMintValue(+e.target.value);
   };
   async function show_error_alert(error) {
+    console.log(error, "error");
     let temp_error = error.message.toString();
     console.log(temp_error);
     let error_list = [
@@ -299,60 +306,32 @@ function App() {
     }
   }
 
-  //-----------------
-  // const buyWithEther = async () => {
-  //   if (selectedEthValueinWei > 0) {
-  //     console.log(selectedEthValueinWei)
-  //     try {
-  //       const { request } = await publicClient.simulateContract({
-  //         address: contract_address,
-  //         abi: contract_abi,
-  //         functionName: "buyTokenInETH",
-  //         args: {
-  //           sender: address,
-  //           amount: selectedEthValueinWei,
-  //         },
-  //       });
-  //       console.log(request, "request");
-  //       await client.writeContract(request);
-  //     } catch (e) {
-  //       show_error_alert(e);
-  //     }
-  //   } else {
-  //     swal.fire("Please select the no of Tokens to buy");
-  //   }
-  // };
-  //-----------------
+  //-----------------------------
   async function buyWithEther() {
     if (selectedEthValueinWei > 0) {
-      console.log("Buy function : ", contract, web3Global, address);
-
-      // price = Math.round(price * 100) / 100;
       try {
-        await getTest()
-        await write()
-        // await getTest()
-        // const estemated_Gas = await contract.methods
-        //   .buyTokenInETH()
-        //   .estimateGas({
-        //     from: address,
-        //     value: selectedEthValueinWei.toString(),
-        //     maxPriorityFeePerGas: null,
-        //     maxFeePerGas: null,
-        //   });
-        // console.log(estemated_Gas);
-        // const result = await contract.methods.buyTokenInETH().send({
-        //   from: address,
-        //   value: selectedEthValueinWei.toString(),
-        //   gas: estemated_Gas,
-        //   maxPriorityFeePerGas: null,
-        //   maxFeePerGas: null,
-        // });
-      } catch (e) {
-        show_error_alert(e);
-      }
+        const { result } = await getTest();
+        const writeResult = await writeAsync();
+      } catch (err) {
+        if (err instanceof BaseError) {
+          const isInsufficientFundsError =
+            err.walk((e) => e instanceof InsufficientFundsError) instanceof
+            InsufficientFundsError;
+          //   const isUserRejectedRequestError =
+          //     err.walk((e) => e instanceof UserRejectedRequestError) instanceof
+          //     UserRejectedRequestError;
 
-      // await contract.methods.tokenByIndex(i).call();
+          //   // const revertError = err.walk(
+          //   //   (err) => err instanceof ContractFunctionExecutionError
+          //   // );
+          if (isInsufficientFundsError) {
+            swal.fire("Not enough balance");
+          }
+          //   if (isUserRejectedRequestError) {
+          //     alert(isInsufficientFundsError,"isUserRejecte");
+          //   }
+        }
+      }
     } else {
       swal.fire("Please select the no of Tokens to buy");
     }
@@ -368,12 +347,14 @@ function App() {
       console.log("Price:  .........   " + selectedEthValueinWei);
       //   price =0.006;
       try {
+        setWertOpen(true);
         const buyUsingCard = await initializationFunction({
           address,
           contract,
         });
         console.log(buyUsingCard, "buyusingCard");
       } catch (e) {
+        setWertOpen(false);
         show_error_alert(e);
       }
 
@@ -383,19 +364,14 @@ function App() {
     }
   }
   function calculate_progress(tokensSold) {
-    // let in_ether = web3Global.utils.fromWei("100000000000000000000", "ether");
-    // let in_ether = tokensSold;
-    // let in_float = parseFloat(in_ether);
-
     console.log(tokensSold, "Sold Tokens");
     // let total_bought = in_float * 0.00002;
     let total_sold = Math.round(tokensSold);
-
+    console.log(total_sold, "totalSold");
     let total_tokens = 62160000;
-    const completed = Math.round((Math.round(total_sold) / total_tokens) * 100);
-    //let completed = ((total_tokens/ 100) * total_sold).toFixed(2)
+    const completed = (total_sold / total_tokens) * 100;
     console.table({ total_sold, completed });
-    setProgressPercentage(completed + "%");
+    setProgressPercentage(completed.toFixed(2) + "%");
   }
 
   //Add token to the Metamask
@@ -648,7 +624,12 @@ function App() {
                 <div className="row">
                   <div className="my-4 col-xxl-8 col-xl-8 col-lg-12 col-md-12">
                     <div className="card h-100">
-                      <div className="card-inner after-content">
+                      <div
+                        id="wert-widget"
+                        className={`card-inner after-content ${
+                          wertOpen ? "w-full h-[800px] relative" : ""
+                        }`}
+                      >
                         <div className="py-4 card-header">
                           <h6 className="card-heading">Buy Tokens</h6>
                         </div>
@@ -769,7 +750,7 @@ function App() {
                             <p className="-mt-2">Listing Price $0.040</p>
                           </div>
                         </div>
-                        <div id="wert-widget" className="text-end card-footer">
+                        <div className="text-end card-footer">
                           {(!isConnected || chain.id !== 1) && (
                             <button
                               type="button"
@@ -782,14 +763,14 @@ function App() {
                           {isConnected && chain.id === 1 && (
                             <>
                               {/* Card using card */}
-                              {/* <button
+                              <button
                                 type="button"
                                 onClick={buyWithCard}
                                 className="btn-buy d-block w-100 text-uppercase btn btn-blue"
                               >
                                 Buy using Card
                               </button>
-                              <br /> */}
+                              <br />
                               <button
                                 type="button"
                                 onClick={buyWithEther}
