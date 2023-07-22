@@ -597,18 +597,18 @@ function App() {
                     FlyGuyz Swap Box
                   </h2>
                 </div>
-                {/* <div class="note mb-5">
-          <div class="card-widget card-widget-success h-100">
-            <div class="card-widget-body d-flex flex-row align-items-center">
-              <div class="dot dot dot-xlg me-3 bg-success"></div>
-              <div class="text pe-3">
-                <h6 class="text-uppercase mb-0">Private sale is finished. Thank you for participating!</h6>
+                {/* <div className="note mb-5">
+          <div className="card-widget card-widget-success h-100">
+            <div className="card-widget-body d-flex flex-row align-items-center">
+              <div className="dot dot dot-xlg me-3 bg-success"></div>
+              <div className="text pe-3">
+                <h6 className="text-uppercase mb-0">Private sale is finished. Thank you for participating!</h6>
                 <span>We will announce further instructions how to claim your FLYY tokens in User dashboard and what
                   are the dates of Public round, TGE, and listings. Check our social media for the detailed
                   information</span>
               </div>
-              <div class="icon icon-lg text-white bg-success"><svg aria-hidden="true" focusable="false"
-                  data-prefix="fal" data-icon="check" class="svg-inline--fa fa-check " role="img"
+              <div className="icon icon-lg text-white bg-success"><svg aria-hidden="true" focusable="false"
+                  data-prefix="fal" data-icon="check" className="svg-inline--fa fa-check " role="img"
                   xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
                   <path fill="currentColor"
                     d="M443.3 100.7C449.6 106.9 449.6 117.1 443.3 123.3L171.3 395.3C165.1 401.6 154.9 401.6 148.7 395.3L4.686 251.3C-1.562 245.1-1.562 234.9 4.686 228.7C10.93 222.4 21.06 222.4 27.31 228.7L160 361.4L420.7 100.7C426.9 94.44 437.1 94.44 443.3 100.7H443.3z">
@@ -620,7 +620,119 @@ function App() {
               </div>
               {/* Private Sale   End */}
               {/* Graphs Start */}
-              <section className="section-sale mb-3 mb-lg-5">
+
+              {/* <section className="container">
+
+              <div className="walletbox">
+              <div className="w-100 d-flex flex-column align-items-center justify-content-start p-3 text-white text-center" style={{backgroundColor: "#580990"}}>
+                <div className="d-flex align-items-center justify-content-center w-100 gap-3 fw-semibold font-20 mb-3">
+                  <div className="rounded-3 time-card text-center">05d</div>
+                  <div className="rounded-3 time-card text-center">23h</div>
+                  <div className="rounded-3 time-card text-center">14m</div>
+                  <div className="rounded-3 time-card text-center">20s</div>
+
+                  </div>
+                  
+                  <h4 className="">BUY IN BEFORE PRICE INCREASES!</h4>
+                  <div className="progress my-2">
+                    <div className="bar" style={{width: "8.59%"}}></div>
+                    <div className="status">Next Stage Price: $0.0325</div>
+                    </div><p className="mb-2 font-sm-15 fw-semibold"> USDT Raised: $16,735,166.01 / $18,004,966.16 </p>
+                </div>
+
+                <div className="p-3 swapArea">
+                <p className="text-center mb-3 font-14 dashTitle fw-semibold" >1 FLYY = $0.010</p>
+                <div className="tab-container gap-2">
+                  <button className="btn btn-light font-14 text-uppercase d-flex align-items-center justify-content-center selected ng-star-inserted">
+                    <img style={{height: "22px"}} alt="" src="img/eth.svg"/>
+
+                      <span className="ps-2 font-14">ETH</span>
+                      </button>
+                  <button className="btn btn-light font-90 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
+                        <img src="img/usdt.svg" style={{height: "22px"}} alt=""/>
+
+                          <span className="ps-2 font-14">USDT</span></button>
+                  <button className="btn btn-light font-14 text-uppercase d-flex align-items-center justify-content-center">
+                            <img  src="img/card.svg" style={{height: "22px"}} alt=""/>
+
+                              <span  translate="" className="ps-2 font-14">CARD</span>
+                              </button>
+                </div>
+
+                </div>
+              </div>
+
+              </section> */}
+<section className="container">
+    <div className="walletbox">
+        <div className="w-100 bg-black d-flex flex-column align-items-center justify-content-start p-3 text-white text-center" id="uppersection" >
+            <div className="d-flex align-items-center justify-content-center w-100 gap-3 fw-semibold font-20 mb-3">
+                <div className="rounded-3 time-card text-center">05d</div>
+                <div className="rounded-3 time-card text-center">21h</div>
+                <div className="rounded-3 time-card text-center">49m</div>
+                <div className="rounded-3 time-card text-center">56s</div>
+            </div>
+            <h4 style={{fontSize: "20px"}}>BUY IN BEFORE PRICE INCREASES!</h4>
+            <div className="progress my-2">
+                <div className="bar" style={{width: "3.3%"}}>
+            </div>
+            <div className="status">Next Stage Price: $0.0325</div>
+        </div>
+        <p style={{fontSize: "15px",fontWeight: "bold"}} className="mb-2 font-sm-15 fw-semibold">USDT Raised: $16,757,237.66 / $18,004,966.16</p>
+    </div>
+    <div className="p-3 swapArea">
+        <p className="text-center mb-3 font-14 dashTitle fw-semibold">
+          1 FLYY = $0.0322</p>
+        <div className="tab-container gap-2">
+            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
+                <img style={{height: "22px"}} alt="" src="/img/eth.svg" /><span className="ps-2 font-14">ETH</span>
+            </button>
+            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
+                <img src="/img/usdt.svg" style={{height: "22px"}} alt="" /><span className="ps-2 font-14">USDT</span>
+            </button>
+            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center selected">
+                <img src="img/card.svg" style={{height: "22px"}} alt="" /><span translate="" className="ps-2 font-14">CARD</span>
+            </button>
+        </div>
+        <app-swap>
+            <div className="swapSection my-3">
+                <div className="body-section ng-star-inserted">
+                    <div className="row">
+                        <div className="col-md-6 pe-md-1">
+                            <div style={{color: "gray"}} className="d-flex align-items-center justify-content-between mb-2">
+                                <label className="d-block text-grey font-13"> Amount in <span className="text-uppercase fw-bold">USD</span> you pay </label>
+                            </div>
+                            <div className="amountField d-flex align-items-start">
+                                <input id="input-box" type="text" apptwodigitdecimalnumber="" placeholder="0" className="form-control" />
+                                <div  className="amountType">
+                                  <img style={{width: "25px"}} src="img/usdt.svg"/>
+                                  </div>
+                            </div>
+                        </div>
+                        <div style={{color: "gray"}} className="col-md-6 ps-md-1">
+                            <div className="d-flex align-items-center justify-content-between mb-2">
+                                <label className="d-block text-mid-grey font-13"> Amount in <span className="text-uppercase fw-bold">FLYY</span> you receive </label>
+                            </div>
+                            <div className="amountField">
+                                <input id="input-box" type="text" apptwodigitdecimalnumber="" min="minAmount" pattern="\d*" placeholder="0" className="form-control" />
+                                <div className="amountType">
+                                    <img style={{width: "28px"}} src="img/flyguyz-logo.png"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </app-swap>
+        <div className="mt-3">
+            <button className="btn2 btn2-black font-14 mb-2 w-100 ng-star-inserted">Buy Now</button>
+             <button className="btn2 btn2-outline-black font-14 mb-2 w-100 ng-star-inserted">Buy with ETH</button>
+            <a className="btn2 btn2-light font-14 text-grey w-100" href="/en#how-to-buy">How To Buy</a>
+        </div>
+    </div>
+    </div>
+</section>
+              {/* <section className="section-sale mb-3 mb-lg-5">
                 <div className="row">
                   <div className="my-4 col-xxl-8 col-xl-8 col-lg-12 col-md-12">
                     <div className="card h-100">
@@ -648,25 +760,7 @@ function App() {
                                 </span>
                               </div>
                               <div className="col-lg-8 col-md-6 mb-3 mb-md-0">
-                                {/* <div class="slider-container">
-                          <div class="nouislider text-primary">
-                            <div class="noUi-target noUi-ltr noUi-horizontal noUi-txt-dir-ltr">
-                              <div class="noUi-base">
-                                <div class="noUi-connects">
-                                  <div class="noUi-connect" style="transform: translate(0%, 0px) scale(0, 1);"></div>
-                                </div>
-                                <div class="noUi-origin" style="transform: translate(-1000%, 0px); z-index: 4;">
-                                  <div class="noUi-handle noUi-handle-lower" data-handle="0" tabindex="0"
-                                    role="slider" aria-orientation="horizontal" aria-valuemin="100.0"
-                                    aria-valuemax="50000.0" aria-valuenow="100.0" aria-valuetext="100">
-                                    <div class="noUi-touch-area"></div>
-                                    <div class="noUi-tooltip">100</div>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>*/}
+
                                 <form className="w-100">
                                   <div className="slider">
                                     <span className="min-value">0.00002</span>
@@ -680,7 +774,7 @@ function App() {
                                         defaultValue={0.00002}
                                         required
                                       />
-                                      {/* <span className="current-value">{selectedEthValue}</span> */}
+          
                                     </div>
                                     <span className="max-value">14</span>
                                   </div>
@@ -762,7 +856,7 @@ function App() {
                           )}
                           {isConnected && chain.id === 1 && (
                             <>
-                              {/* Card using card */}
+                              
                               <button
                                 type="button"
                                 onClick={buyWithCard}
@@ -786,8 +880,6 @@ function App() {
                     </div>
                   </div>
 
-                  {/* Bottom page sale bar portion */}
-                  {/* Side table */}
                   <div className="mb-4 col-lg-4 col-md-12">
                     <div className="mt-4">
                       <div className="card">
@@ -818,18 +910,18 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  {/* end side table */}
+
                   <PercentageBar progressPercentage={progressPercentage} />
                 </div>
-                {/* End of sale bar portion */}
-              </section>
-              {/* Graphs   End */}
+  
+              </section> */}
+     
             </div>
-            {/* Footer Start */}
+       
             <Footer />
-            {/* Footer   End */}
+    
           </div>
-          {/* Other Page   End */}
+     
         </div>
       </div>
 
