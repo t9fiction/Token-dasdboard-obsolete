@@ -405,6 +405,46 @@ function App() {
       console.log(error);
     }
   };
+
+  // Counter
+
+  // Set the target date (August 28, 2023)
+  const targetDate = new Date("2023-08-26T00:00:00");
+
+  // State to store the remaining time
+  const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
+
+  // Function to calculate the remaining time
+  function calculateRemainingTime() {
+    const currentTime = new Date();
+    const timeDifference = targetDate - currentTime;
+    return timeDifference > 0 ? timeDifference : 0;
+  }
+
+  // Function to update the remaining time every second
+  function updateRemainingTime() {
+    setRemainingTime(calculateRemainingTime());
+  }
+
+  useEffect(() => {
+    // Update the remaining time every second
+    const interval = setInterval(updateRemainingTime, 1000);
+
+    // Clear the interval when the component is unmounted
+    return () => clearInterval(interval);
+  }, []);
+
+  // Function to format the remaining time as days, hours, minutes, and seconds
+  function formatTime(milliseconds) {
+    const seconds = Math.floor(milliseconds / 1000) % 60;
+    const minutes = Math.floor(milliseconds / (1000 * 60)) % 60;
+    const hours = Math.floor(milliseconds / (1000 * 60 * 60)) % 24;
+    const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
+    return { days, hours, minutes, seconds };
+  }
+
+  const { days, hours, minutes, seconds } = formatTime(remainingTime);
+
   return (
     <div>
       <meta charSet="UTF-8" />
@@ -663,75 +703,151 @@ function App() {
               </div>
 
               </section> */}
-<section className="container">
-    <div className="walletbox">
-        <div className="w-100 bg-black d-flex flex-column align-items-center justify-content-start p-3 text-white text-center" id="uppersection" >
-            <div className="d-flex align-items-center justify-content-center w-100 gap-3 fw-semibold font-20 mb-3">
-                <div className="rounded-3 time-card text-center">05d</div>
-                <div className="rounded-3 time-card text-center">21h</div>
-                <div className="rounded-3 time-card text-center">49m</div>
-                <div className="rounded-3 time-card text-center">56s</div>
-            </div>
-            <h4 style={{fontSize: "20px"}}>BUY IN BEFORE PRICE INCREASES!</h4>
-            <div className="progress my-2">
-                <div className="bar" style={{width: "3.3%"}}>
-            </div>
-            <div className="status">Next Stage Price: $0.0325</div>
-        </div>
-        <p style={{fontSize: "15px",fontWeight: "bold"}} className="mb-2 font-sm-15 fw-semibold">USDT Raised: $16,757,237.66 / $18,004,966.16</p>
-    </div>
-    <div className="p-3 swapArea">
-        <p className="text-center mb-3 font-14 dashTitle fw-semibold">
-          1 FLYY = $0.0322</p>
-        <div className="tab-container gap-2">
-            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
-                <img style={{height: "22px"}} alt="" src="/img/eth.svg" /><span className="ps-2 font-14">ETH</span>
-            </button>
-            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
-                <img src="/img/usdt.svg" style={{height: "22px"}} alt="" /><span className="ps-2 font-14">USDT</span>
-            </button>
-            <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center selected">
-                <img src="img/card.svg" style={{height: "22px"}} alt="" /><span translate="" className="ps-2 font-14">CARD</span>
-            </button>
-        </div>
-        <app-swap>
-            <div className="swapSection my-3">
-                <div className="body-section ng-star-inserted">
-                    <div className="row">
-                        <div className="col-md-6 pe-md-1">
-                            <div style={{color: "gray"}} className="d-flex align-items-center justify-content-between mb-2">
-                                <label className="d-block text-grey font-13"> Amount in <span className="text-uppercase fw-bold">USD</span> you pay </label>
-                            </div>
-                            <div className="amountField d-flex align-items-start">
-                                <input id="input-box" type="text" apptwodigitdecimalnumber="" placeholder="0" className="form-control" />
-                                <div  className="amountType">
-                                  <img style={{width: "25px"}} src="img/usdt.svg"/>
-                                  </div>
-                            </div>
-                        </div>
-                        <div style={{color: "gray"}} className="col-md-6 ps-md-1">
-                            <div className="d-flex align-items-center justify-content-between mb-2">
-                                <label className="d-block text-mid-grey font-13"> Amount in <span className="text-uppercase fw-bold">FLYY</span> you receive </label>
-                            </div>
-                            <div className="amountField">
-                                <input id="input-box" type="text" apptwodigitdecimalnumber="" min="minAmount" pattern="\d*" placeholder="0" className="form-control" />
-                                <div className="amountType">
-                                    <img style={{width: "28px"}} src="img/flyguyz-logo.png"/>
-                                </div>
-                            </div>
-                        </div>
+              <section className="container">
+                <div className="walletbox">
+                  <div
+                    className="w-100 bg-black d-flex flex-column align-items-center justify-content-start p-3 text-white text-center"
+                    id="uppersection"
+                  >
+                    <div className="d-flex align-items-center justify-content-center w-100 gap-3 fw-semibold font-20 mb-3">
+                      <div className="rounded-3 time-card text-center">
+                        {days}d
+                      </div>
+                      <div className="rounded-3 time-card text-center">{hours}h</div>
+                      <div className="rounded-3 time-card text-center">{minutes}m</div>
+                      <div className="rounded-3 time-card text-center">{seconds}s</div>
                     </div>
+                    <h4 style={{ fontSize: "20px" }}>
+                      BUY IN BEFORE PRICE INCREASES!
+                    </h4>
+                    <div className="progress my-2">
+                      <div className="bar" style={{ width: "3.3%" }}></div>
+                      <div className="status">Next Stage Price: $0.0325</div>
+                    </div>
+                    <p
+                      style={{ fontSize: "15px", fontWeight: "bold" }}
+                      className="mb-2 font-sm-15 fw-semibold"
+                    >
+                      USDT Raised: $16,757,237.66 / $18,004,966.16
+                    </p>
+                  </div>
+                  <div className="p-3 swapArea">
+                    <p className="text-center mb-3 font-14 dashTitle fw-semibold">
+                      1 FLYY = $0.0322
+                    </p>
+                    <div className="tab-container gap-2">
+                      <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
+                        <img
+                          style={{ height: "22px" }}
+                          alt=""
+                          src="/img/eth.svg"
+                        />
+                        <span className="ps-2 font-14">ETH</span>
+                      </button>
+                      <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center ng-star-inserted">
+                        <img
+                          src="/img/usdt.svg"
+                          style={{ height: "22px" }}
+                          alt=""
+                        />
+                        <span className="ps-2 font-14">USDT</span>
+                      </button>
+                      <button className="btn1 btn-light font-14 text-uppercase d-flex align-items-center justify-content-center selected">
+                        <img
+                          src="img/card.svg"
+                          style={{ height: "22px" }}
+                          alt=""
+                        />
+                        <span translate="" className="ps-2 font-14">
+                          CARD
+                        </span>
+                      </button>
+                    </div>
+                    <app-swap>
+                      <div className="swapSection my-3">
+                        <div className="body-section ng-star-inserted">
+                          <div className="row">
+                            <div className="col-md-6 pe-md-1">
+                              <div
+                                style={{ color: "gray" }}
+                                className="d-flex align-items-center justify-content-between mb-2"
+                              >
+                                <label className="d-block text-grey font-13">
+                                  {" "}
+                                  Amount in{" "}
+                                  <span className="text-uppercase fw-bold">
+                                    USD
+                                  </span>{" "}
+                                  you pay{" "}
+                                </label>
+                              </div>
+                              <div className="amountField d-flex align-items-start">
+                                <input
+                                  id="input-box"
+                                  type="text"
+                                  apptwodigitdecimalnumber=""
+                                  placeholder="0"
+                                  className="form-control"
+                                />
+                                <div className="amountType">
+                                  <img
+                                    style={{ width: "25px" }}
+                                    src="img/usdt.svg"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                            <div
+                              style={{ color: "gray" }}
+                              className="col-md-6 ps-md-1"
+                            >
+                              <div className="d-flex align-items-center justify-content-between mb-2">
+                                <label className="d-block text-mid-grey font-13">
+                                  {" "}
+                                  Amount in{" "}
+                                  <span className="text-uppercase fw-bold">
+                                    FLYY
+                                  </span>{" "}
+                                  you receive{" "}
+                                </label>
+                              </div>
+                              <div className="amountField">
+                                <input
+                                  id="input-box"
+                                  type="text"
+                                  apptwodigitdecimalnumber=""
+                                  min="minAmount"
+                                  pattern="\d*"
+                                  placeholder="0"
+                                  className="form-control"
+                                />
+                                <div className="amountType">
+                                  <img
+                                    style={{ width: "28px" }}
+                                    src="img/flyguyz-logo.png"
+                                  />
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </app-swap>
+                    <div className="mt-3">
+                      <button className="btn2 btn2-black font-14 mb-2 w-100 ng-star-inserted">
+                        Buy Now
+                      </button>
+                      {/* <button className="btn2 btn2-outline-black font-14 mb-2 w-100 ng-star-inserted">Buy with ETH</button> */}
+                      <a
+                        className="btn2 btn2-light font-14 text-grey w-100"
+                        href="/en#how-to-buy"
+                      >
+                        How To Buy
+                      </a>
+                    </div>
+                  </div>
                 </div>
-            </div>
-        </app-swap>
-        <div className="mt-3">
-            <button className="btn2 btn2-black font-14 mb-2 w-100 ng-star-inserted">Buy Now</button>
-             <button className="btn2 btn2-outline-black font-14 mb-2 w-100 ng-star-inserted">Buy with ETH</button>
-            <a className="btn2 btn2-light font-14 text-grey w-100" href="/en#how-to-buy">How To Buy</a>
-        </div>
-    </div>
-    </div>
-</section>
+              </section>
               {/* <section className="section-sale mb-3 mb-lg-5">
                 <div className="row">
                   <div className="my-4 col-xxl-8 col-xl-8 col-lg-12 col-md-12">
@@ -915,13 +1031,10 @@ function App() {
                 </div>
   
               </section> */}
-     
             </div>
-       
+
             <Footer />
-    
           </div>
-     
         </div>
       </div>
 
