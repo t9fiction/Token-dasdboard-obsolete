@@ -409,7 +409,7 @@ function App() {
   // Counter
 
   // Set the target date (August 28, 2023)
-  const targetDate = new Date("2023-08-28T00:00:00");
+  const targetDate = new Date("2023-08-26T00:00:00");
 
   // State to store the remaining time
   const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
