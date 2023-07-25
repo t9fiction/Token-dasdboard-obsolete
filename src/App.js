@@ -406,14 +406,14 @@ function App() {
     }
   };
 
-  // Counter
-
+  // Counter------------------------------------------------------
+  
   // Set the target date (August 28, 2023)
   const targetDate = new Date("2023-08-26T00:00:00");
-
+  
   // State to store the remaining time
   const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
-
+  
   // Function to calculate the remaining time
   function calculateRemainingTime() {
     const currentTime = new Date();
@@ -425,15 +425,15 @@ function App() {
   function updateRemainingTime() {
     setRemainingTime(calculateRemainingTime());
   }
-
+  
   useEffect(() => {
     // Update the remaining time every second
     const interval = setInterval(updateRemainingTime, 1000);
-
+    
     // Clear the interval when the component is unmounted
     return () => clearInterval(interval);
   }, []);
-
+  
   // Function to format the remaining time as days, hours, minutes, and seconds
   function formatTime(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000) % 60;
@@ -442,9 +442,10 @@ function App() {
     const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
     return { days, hours, minutes, seconds };
   }
-
+  
   const { days, hours, minutes, seconds } = formatTime(remainingTime);
-
+  
+  // Counter------------------------------------------------------
   return (
     <div>
       <meta charSet="UTF-8" />
