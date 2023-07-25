@@ -102,6 +102,7 @@ function App() {
   useEffect(() => {
     const func = async () => {
       await startFunction();
+      await fetch_data();
     };
     func();
   }, []);
@@ -116,7 +117,6 @@ function App() {
 
       addReferral(address);
       // setweb3global(web3);
-
       await fetch_data();
     }
 
@@ -238,8 +238,9 @@ function App() {
       settokenPriceInUSDT(tokenPrice);
     };
     await getPriceInUSDT();
-    //--------------------------------------------------------------------------------------
   }
+  //--------------------------------------------------------------------------------------
+
   const onEthValueInputHandler = (e) => {
     let temp = parseInt(e.target.value - 0.00002);
     temp = temp + 1;
@@ -367,11 +368,12 @@ function App() {
     console.log(tokensSold, "Sold Tokens");
     // let total_bought = in_float * 0.00002;
     let total_sold = Math.round(tokensSold);
-    console.log(total_sold, "totalSold");
     let total_tokens = 62160000;
     const completed = (total_sold / total_tokens) * 100;
     console.table({ total_sold, completed });
-    setProgressPercentage(completed.toFixed(2) + "%");
+    // setProgressPercentage(90.2*2 + "%");
+    setProgressPercentage(completed.toFixed(2)*2 + "%");
+    console.log(progressPercentage, "progress");
   }
 
   //Add token to the Metamask
@@ -407,13 +409,13 @@ function App() {
   };
 
   // Counter------------------------------------------------------
-  
+
   // Set the target date (August 28, 2023)
   const targetDate = new Date("2023-08-26T00:00:00");
-  
+
   // State to store the remaining time
   const [remainingTime, setRemainingTime] = useState(calculateRemainingTime());
-  
+
   // Function to calculate the remaining time
   function calculateRemainingTime() {
     const currentTime = new Date();
@@ -425,15 +427,15 @@ function App() {
   function updateRemainingTime() {
     setRemainingTime(calculateRemainingTime());
   }
-  
+
   useEffect(() => {
     // Update the remaining time every second
     const interval = setInterval(updateRemainingTime, 1000);
-    
+
     // Clear the interval when the component is unmounted
     return () => clearInterval(interval);
   }, []);
-  
+
   // Function to format the remaining time as days, hours, minutes, and seconds
   function formatTime(milliseconds) {
     const seconds = Math.floor(milliseconds / 1000) % 60;
@@ -442,9 +444,9 @@ function App() {
     const days = Math.floor(milliseconds / (1000 * 60 * 60 * 24));
     return { days, hours, minutes, seconds };
   }
-  
+
   const { days, hours, minutes, seconds } = formatTime(remainingTime);
-  
+
   // Counter------------------------------------------------------
   return (
     <div>
@@ -714,17 +716,44 @@ function App() {
                       <div className="rounded-3 time-card text-center">
                         {days}d
                       </div>
-                      <div className="rounded-3 time-card text-center">{hours}h</div>
-                      <div className="rounded-3 time-card text-center">{minutes}m</div>
-                      <div className="rounded-3 time-card text-center">{seconds}s</div>
+                      <div className="rounded-3 time-card text-center">
+                        {hours}h
+                      </div>
+                      <div className="rounded-3 time-card text-center">
+                        {minutes}m
+                      </div>
+                      <div className="rounded-3 time-card text-center">
+                        {seconds}s
+                      </div>
                     </div>
                     <h4 style={{ fontSize: "20px" }}>
                       BUY IN BEFORE PRICE INCREASES!
                     </h4>
-                    <div className="progress my-2">
-                      <div className="bar" style={{ width: "3.3%" }}></div>
+                    {/* <div className="progress my-2">
+                      <div
+                        className="bar"
+                        style={{ width: progressPercentage }}
+                      ></div>
                       <div className="status">Next Stage Price: $0.0325</div>
+                    </div> */}
+
+                    <div className="progress my-2 relative">
+                      <div className="fundraising-element mb-3 mb-md-0 col-lg-7 col-md-6">
+                        <div
+                          role="progressbar"
+                          className="progress-bar bg-green progress-bar-animated progress-bar-striped h-full"
+                          aria-valuenow={0}
+                          aria-valuemin={0}
+                          aria-valuemax={100}
+                          style={{ width: progressPercentage }}
+                        >
+                        </div>
+                      </div>
+                      <div className="status flex justify-center absolute">
+                        Next Stage Price: $0.0325
+                      </div>
                     </div>
+
                     <p
                       style={{ fontSize: "15px", fontWeight: "bold" }}
                       className="mb-2 font-sm-15 fw-semibold"
