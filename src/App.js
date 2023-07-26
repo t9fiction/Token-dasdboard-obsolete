@@ -410,7 +410,7 @@ function App() {
 
   // Counter------------------------------------------------------
 
-  // Set the target date (August 28, 2023)
+  // Set the target date (August 26, 2023)
   const targetDate = new Date("2023-08-26T00:00:00");
 
   // State to store the remaining time
@@ -864,9 +864,14 @@ function App() {
                       </div>
                     </app-swap>
                     <div className="mt-3">
+                    {(!isConnected || chain.id !== 1) ? 
+                      <button className="btn2 btn2-black font-14 mb-2 w-100 ng-star-inserted uppercase">
+                        Connect Wallet
+                      </button> :
                       <button className="btn2 btn2-black font-14 mb-2 w-100 ng-star-inserted">
                         Buy Now
                       </button>
+                    }
                       {/* <button className="btn2 btn2-outline-black font-14 mb-2 w-100 ng-star-inserted">Buy with ETH</button> */}
                       <a
                         className="btn2 btn2-light font-14 text-grey w-100"
